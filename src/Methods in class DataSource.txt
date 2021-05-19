@@ -1,0 +1,19 @@
+open: Sets connection to the connection string and loads everything into the GUI
+close: closes all SQL connections
+getInstance: Used for encapsulation and keeping the DataSource hidden from other classes
+loadResearchRewardsListOnly: Loads only the Pokemon from the research SQL table - DEPRECATED - no need to do this here, when writeResearchRewards pulls straight from the full list
+loadStack: Loads the saved stack from the SQL table
+writeResearchRewards: Deletes the research table and recreates it using the new Pokemon in the current and legacy list - MODIFIED - No need to delete table, 
+	just loop through all the names in the CURRENT_AND_LEGACY_REWARDS_LIST, pull them from the full list, and put them in researchRewards.
+writeToStack: Writes to stack SQL table the new Pokemon that was just claimed
+addReward: Called from the controller classes, adds the reward and calls writeToStack
+catchReward: 
+catchAll
+generateToggleButtons
+getResearchRewards
+getStackStardustValue
+getTotalPokemon
+getStack
+setStackStardustValue
+removeFromStack
+writeToSQLFullPokemon

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<GridPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sample.AddRewardDialogController"
+            prefHeight="200.0" prefWidth="700.0"
+            fx:id="rewardGridPane" hgap="5" vgap="5">
+    <Label text="Select CP:" GridPane.rowIndex="0" GridPane.columnIndex="6"/>
+    <ListView fx:id="cpListView" GridPane.rowIndex="1" GridPane.columnIndex="6" GridPane.rowSpan="6" prefWidth="70"/>
+
+</GridPane>
