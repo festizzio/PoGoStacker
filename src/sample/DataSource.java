@@ -207,12 +207,16 @@ public class DataSource {
                         }
                     }
                 }
-                if (!pokemon.setCP(CP)) {
-                    System.out.println("Error setting CP for " + pokemonName + ": CP of " + CP + " is invalid.");
-                    break;
+                if(pokemon != null) {
+                    if (!pokemon.setCP(CP)) {
+                        System.out.println("Error setting CP for " + pokemonName + ": CP of " + CP + " is invalid.");
+                        break;
+                    } else {
+                        stack.add(pokemon);
+                        stardustValue += pokemon.getStardustValue();
+                    }
                 } else {
-                    stack.add(pokemon);
-                    stardustValue += pokemon.getStardustValue();
+                    System.out.println("Error setting CP for Pokemon. Pokemon not found.");
                 }
             }
 
