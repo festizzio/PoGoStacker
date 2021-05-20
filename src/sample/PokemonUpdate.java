@@ -154,9 +154,14 @@ public class PokemonUpdate {
                                 try {
                                     int pokedexNum = Integer.parseInt(sFileNameOnly);
                                     if(DataSource.getInstance().getPokemon(pokedexNum) == null) {
-                                        // App simply freezes while executing lin 159 below
-                                        // No errors, no exceptions, just nothing.
-                                        fillRewardsStatement.setInt(INDEX_POKEDEX_NUMBER, pokedexNum);
+                                        // Was somehow getting an index 1 out of bounds for length 1 in the below try/catch block
+                                        // Found it after digging in the debugger and adding the block.
+                                        // In total, it catches the IndexOutOfBoundsException 5-6 times or so.
+                                        try {
+                                            fillRewardsStatement.setInt(1, pokedexNum);
+                                        } catch(IndexOutOfBoundsException ie) {
+                                            ie.printStackTrace();
+                                        }
                                         try (ResultSet rewardResult = fillRewardsStatement.executeQuery()) {
                                             if(rewardResult.next()) {
                                                 newPokemonName = rewardResult.getString(INDEX_POKEMON_NAME);

@@ -140,6 +140,9 @@ public class DataSource {
 
     public void close() {
         try {
+            if(conn != null) {
+                conn.close();
+            }
             if(insertIntoStack != null) {
                 insertIntoStack.close();
             }
@@ -154,9 +157,6 @@ public class DataSource {
             }
             if(createStackTable != null) {
                 createStackTable.close();
-            }
-            if(conn != null) {
-                conn.close();
             }
         } catch(SQLException e) {
             System.out.println("Unable to close connection: " + e.getMessage());
