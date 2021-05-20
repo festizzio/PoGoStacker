@@ -130,16 +130,18 @@ public class PokemonUpdate {
     public Task<Void> updateTask = new Task<>() {
         @Override
         protected Void call() {
-            DataSource.getInstance().close();
             Elements rewards = tsrDoc.getElementsByClass("pokemon");
 
             // Increments can go up to 100, since the maximum number of updates per list is 50.
             double incrementProgress = 0.01;
+            try(PreparedStatement deleteResearch = conn.prepareStatement(DELETE_RESEARCH_TABLE)) {
+                deleteResearch.execute();
+            } catch(SQLException e) {
+                System.out.println("Error deleting research table");
+                e.printStackTrace();
+            }
 
-            try {
-                fillRewardsStatement = conn.prepareStatement(DELETE_RESEARCH_TABLE);
-                fillRewardsStatement.execute();
-                fillRewardsStatement = conn.prepareStatement(QUERY_FOR_FILLING_REWARDS_TABLE_POKEDEX);
+            try (PreparedStatement fillRewardsStatement = conn.prepareStatement(QUERY_FOR_FILLING_REWARDS_TABLE_POKEDEX)){
                 for (Element element : rewards) {
                     Elements pngs = element.getElementsByTag("img");
                     if (!(pngs.first() == null)) {
@@ -152,6 +154,8 @@ public class PokemonUpdate {
                                 try {
                                     int pokedexNum = Integer.parseInt(sFileNameOnly);
                                     if(DataSource.getInstance().getPokemon(pokedexNum) == null) {
+                                        // App simply freezes while executing lin 159 below
+                                        // No errors, no exceptions, just nothing.
                                         fillRewardsStatement.setInt(INDEX_POKEDEX_NUMBER, pokedexNum);
                                         try (ResultSet rewardResult = fillRewardsStatement.executeQuery()) {
                                             if(rewardResult.next()) {
@@ -163,9 +167,11 @@ public class PokemonUpdate {
                                             addUpdatedPokemon.printStackTrace();
                                         }
                                     } else {
+                                        System.out.println("Pokemon found in current rewards list");
                                         newPokemonName = DataSource.getInstance().getPokemon(pokedexNum).getName();
                                     }
                                 } catch (NumberFormatException e) {
+                                    System.out.println("file name was a string, not int");
                                     newPokemonName = capitalizeFirstLetterOfEachWord(convertName(sFileNameOnly).getPokemonSqlDbName());
                                 }
                                 if(newPokemonSet.add(newPokemonName)) {
@@ -188,15 +194,6 @@ public class PokemonUpdate {
                 } catch (SQLException f) {
                     Alert rollbackError = new Alert(Alert.AlertType.ERROR);
                     rollbackError.setContentText("Unable to rollback data changes. BIG DANGER");
-                }
-            } finally {
-                try {
-                    if (fillRewardsStatement != null) {
-                        fillRewardsStatement.close();
-                    }
-                } catch(SQLException g) {
-                    System.out.println("Error closing fillRewardsStatement");
-                    g.printStackTrace();
                 }
             }
             try (Statement statement = conn.createStatement()) {
@@ -243,17 +240,9 @@ public class PokemonUpdate {
                     Alert rollbackError = new Alert(Alert.AlertType.ERROR);
                     rollbackError.setContentText("Unable to rollback data changes. BIG DANGER");
                 }
-            } finally {
-                if(DataSource.getInstance().reopen()) {
-                    updateMessage("Successfully re-opened database");
-                } else {
-                    System.out.println("FATAL ERROR: Couldn't re-open database after updating list");
-                    Platform.exit();
-                }
             }
             updateProgress(1, 1);
             updateMessage("Finished updating rewards!");
-            DataSource.getInstance().loadResearchRewardsFromSql();
             return null;
         }
     };
@@ -336,12 +325,20 @@ public class PokemonUpdate {
             pokemonNameModifier = pokemonFromSilphRoad.replaceAll(basePokemonName, "");
             basePokemonName2 = basePokemonName.replaceAll("\\W+", "");
             pokemonSqlDbName = pokemonNameModifier + "n " + basePokemonName2;
-        } else if(pokemonFromSilphRoad.matches(".*[Gg]alar.*")) {
+        } else if(pokemonFromSilphRoad.matches(".*[Gg]alaria.*")) {
             basePokemonName = pokemonFromSilphRoad.replaceAll("[Gg]alaria", "");
             spriteName = pokemonFromSilphRoad + "n";
             pokemonNameModifier = pokemonFromSilphRoad.replaceAll(basePokemonName, "");
             basePokemonName2 = basePokemonName.replaceAll("\\W+", "");
             pokemonSqlDbName = pokemonNameModifier + "n " + basePokemonName2;
+        } else if(pokemonFromSilphRoad.matches(".*[Gg]alar$")) {
+            basePokemonName = pokemonFromSilphRoad.replaceAll("[Gg]alar", "").replaceAll("-","");
+            // basePokemonName = zigzagoon
+            pokemonNameModifier = (pokemonFromSilphRoad.replaceAll(basePokemonName, "") + "ian").
+                    replaceAll("-","");
+            // pokemonNameModifier = galarian
+            spriteName = pokemonNameModifier + " " + basePokemonName;
+            pokemonSqlDbName = capitalizeFirstLetterOfEachWord(spriteName);
         } else if(pokemonFromSilphRoad.matches(".*[Rr]ainy.*")) {
             basePokemonName = pokemonFromSilphRoad.replaceAll("[Rr]ainy", "");
             spriteName = pokemonFromSilphRoad;

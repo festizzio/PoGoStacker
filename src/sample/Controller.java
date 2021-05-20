@@ -139,6 +139,7 @@ public class Controller {
                 "This will download from TSR and pokemongodb.net.");
         Optional<ButtonType> result = updateAlert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
+            DataSource.getInstance().close();
             updateDialog = new Dialog<>();
             updateDialog.initOwner(mainBorderPane.getScene().getWindow());
             updateDialog.setTitle("Updating Rewards Lists");
@@ -169,10 +170,13 @@ public class Controller {
 //                    event.consume();
 //                }
 //            });
-            DataSource.getInstance().close();
             updateController.updateRewardsTable();
             updateDialog.showAndWait();
-            DataSource.getInstance().loadResearchRewardsFromSql();
+            if(DataSource.getInstance().reopen()) {
+                DataSource.getInstance().loadResearchRewardsFromSql();
+            } else {
+                System.out.println("Error re-opening and loading research rewards");
+            }
         }
 
 //        Optional<ButtonType> result = dialog.showAndWait();

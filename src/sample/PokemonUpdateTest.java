@@ -33,6 +33,15 @@ class PokemonUpdateTest {
                 .convertName("meowth-alola").getPokemonDbNameForSprite());
         assertEquals("castform-rainy", PokemonUpdate.getInstance()
                 .convertName("castform-rainy").getPokemonDbNameForSprite());
+
+        String spriteName = PokemonUpdate.getInstance().convertName("zigzagoon-galar").
+                getPokemonDbNameForSprite();
+        String sqlDbName = PokemonUpdate.getInstance().convertName("zigzagoon-galar").
+                getPokemonSqlDbName();
+
+        assertEquals("galarian zigzagoon", spriteName);
+        assertEquals("Galarian Zigzagoon", sqlDbName);
+
     }
 
     @Test

@@ -124,6 +124,13 @@ public class DataSource {
             conn = DriverManager.getConnection(CONNECTION_STRING);
             loadResearchRewardsFromSql();
             loadStack();
+            try {
+                conn.setAutoCommit(false);
+            } catch(SQLException g) {
+                Alert autoCommitError = new Alert(Alert.AlertType.ERROR);
+                autoCommitError.setContentText("Error setting connection's autoCommit to false.");
+                return false;
+            }
             return true;
         } catch(SQLException e) {
             System.out.println("Error opening database");
@@ -144,6 +151,9 @@ public class DataSource {
             }
             if(queryPokemonTableForRewards != null) {
                 queryPokemonTableForRewards.close();
+            }
+            if(createStackTable != null) {
+                createStackTable.close();
             }
             if(conn != null) {
                 conn.close();
@@ -197,27 +207,17 @@ public class DataSource {
                         }
                     }
                 }
-                if(pokemon != null) {
-                    if (!pokemon.setCP(CP)) {
-                        System.out.println("Error setting CP for " + pokemonName + ": CP of " + CP + " is invalid.");
-                        break;
-                    } else {
-                        stack.add(pokemon);
-                        stardustValue += pokemon.getStardustValue();
-                    }
+                if (!pokemon.setCP(CP)) {
+                    System.out.println("Error setting CP for " + pokemonName + ": CP of " + CP + " is invalid.");
+                    break;
+                } else {
+                    stack.add(pokemon);
+                    stardustValue += pokemon.getStardustValue();
                 }
             }
 
         } catch(SQLException e) {
             System.out.println("Error loading database from loadStack(): " + e.getMessage());
-        } finally {
-            try {
-                if(queryPokemonTableForRewards != null) {
-                    queryPokemonTableForRewards.close();
-                }
-            } catch(SQLException closeQueryPreparedStatement) {
-                closeQueryPreparedStatement.printStackTrace();
-            }
         }
         setStackStardustValue(stardustValue);
     }
@@ -231,13 +231,6 @@ public class DataSource {
     }
 
     private void fillList(String QUERY_RESEARCH, boolean isLegacy) {
-        try {
-            conn.setAutoCommit(false);
-        } catch(SQLException g) {
-            Alert autoCommitError = new Alert(Alert.AlertType.ERROR);
-            autoCommitError.setContentText("Error setting connection's autoCommit to false.");
-            return;
-        }
         try (PreparedStatement statement = conn.prepareStatement(QUERY_RESEARCH);
              ResultSet results = statement.executeQuery()) {
 
@@ -286,23 +279,13 @@ public class DataSource {
 
 
     private void writeToStack(Pokemon pokemon) {
-        try {
-            insertIntoStack = conn.prepareStatement(INSERT_STACK);
-            insertIntoStack.setString(1, pokemon.getName());
-            insertIntoStack.setInt(2, pokemon.getCP());
-
+        try (PreparedStatement insertIntoStack = conn.prepareStatement(INSERT_STACK)) {
+            insertIntoStack.setString(INDEX_POKEMON_NAME, pokemon.getName());
+            insertIntoStack.setInt(INDEX_CP, pokemon.getCP());
             insertIntoStack.execute();
+            conn.commit();
         } catch(SQLException e) {
             System.out.println("Error creating statement in writeToStack()");
-        } finally {
-            try {
-                if(insertIntoStack != null) {
-                    insertIntoStack.close();
-                    conn.commit();
-                }
-            } catch(SQLException e) {
-                System.out.println("Error closing prepared statement: " + e.getMessage());
-            }
         }
     }
 
@@ -354,20 +337,11 @@ public class DataSource {
     }
 
     private void removeFromStack(String whatToRemove) {
-        try {
-            removeFromStack = conn.prepareStatement(whatToRemove);
+        try (PreparedStatement removeFromStack = conn.prepareStatement(whatToRemove)) {
             removeFromStack.execute();
+            conn.commit();
         } catch(SQLException e) {
             System.out.println("Error creating prepared statement for remove: " + e.getMessage());
-        } finally {
-            try {
-                if(removeFromStack != null) {
-                    removeFromStack.close();
-                    conn.commit();
-                }
-            } catch(SQLException e) {
-                System.out.println("Error closing prepared statement remove stack: " + e.getMessage());
-            }
         }
     }
 
