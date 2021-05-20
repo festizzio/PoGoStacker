@@ -49,7 +49,6 @@ public class PokemonUpdate {
 
     private static final String QUERY_FOR_FILLING_REWARDS_TABLE_POKEDEX = "SELECT * FROM " + TABLE_POKEMON + " WHERE " +
             COLUMN_POKEDEX_NUMBER + " = ?";
-    private PreparedStatement fillRewardsStatement;
     private static final String QUERY_FOR_FILLING_REWARDS_TABLE_NAME = "SELECT * FROM " + TABLE_POKEMON + " WHERE " +
             COLUMN_POKEMON_NAME + " = ?";
     private static final String QUERY_FOR_FILLING_LEGACY_TABLE = "SELECT * FROM " + TABLE_POKEMON + " WHERE " + COLUMN_POKEMON_NAME + " = '";
@@ -69,16 +68,11 @@ public class PokemonUpdate {
     private Document tsrDoc;
     private List<Document> legacyDocs = new ArrayList<>();
     private Document legacy;
-    int currentYear = 2021;
     private static PokemonUpdate instance = new PokemonUpdate();
     @FXML
     public ProgressBar updateProgressBar;
     @FXML
     public Label updateLabel;
-    @FXML
-    public Button updateButton;
-    @FXML
-    public Button closeWindowButton;
 
     public SimpleStringProperty updateProperty;
 
@@ -107,9 +101,6 @@ public class PokemonUpdate {
             System.out.println("Error creating tsrDoc from thesilphroad.com: " + e.getMessage());
         }
         try {
-//            for(int i = 2021; i <= currentYear; i++) {
-//                legacyDocs.add(Jsoup.connect("https://pokemongo.fandom.com/wiki/List_of_Field_Research_tasks_and_rewards/" + i).get());
-//            }
             legacy = Jsoup.connect("https://pokemongo.fandom.com/wiki/List_of_Field_Research_tasks_and_rewards/2021").get();
         } catch(IOException e) {
             System.out.println("Error creating legacy doc(s) from pokemon.fandom.com: " + e.getMessage());
@@ -133,6 +124,7 @@ public class PokemonUpdate {
             Elements rewards = tsrDoc.getElementsByClass("pokemon");
 
             // Increments can go up to 100, since the maximum number of updates per list is 50.
+            // Current rewards never go over 30-40 unique so the limit of 50 is mainly for legacy rewards.
             double incrementProgress = 0.01;
             try(PreparedStatement deleteResearch = conn.prepareStatement(DELETE_RESEARCH_TABLE)) {
                 deleteResearch.execute();

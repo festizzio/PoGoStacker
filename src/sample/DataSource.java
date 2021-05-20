@@ -83,12 +83,6 @@ public class DataSource {
     private static final String REMOVE_TOP_STACK = "DELETE FROM " + TABLE_STACK + " WHERE ROWID in (SELECT ROWID FROM " + TABLE_STACK + " LIMIT 1)";
     private static final String REMOVE_ALL_STACK = "DELETE FROM " + TABLE_STACK;
 
-    // PreparedStatements for inserting and removing Pokemon from the stack.
-    private PreparedStatement createRewardTable;
-    private PreparedStatement insertIntoStack;
-    private PreparedStatement removeFromStack;
-    private PreparedStatement queryPokemonTableForRewards;
-
     private static final String INSERT_REWARD = "INSERT INTO " + TABLE_RESEARCH_REWARDS + " (" + COLUMN_POKEMON_NAME + ", " +
             COLUMN_POKEDEX_NUMBER + ", " + COLUMN_BASE_ATTACK + ", " +
             COLUMN_BASE_DEFENSE + ", " + COLUMN_BASE_STAMINA + ") VALUES(?, ?, ?, ?, ?)";
@@ -97,7 +91,6 @@ public class DataSource {
             COLUMN_BASE_DEFENSE + ", " + COLUMN_BASE_STAMINA + ") VALUES(?, ?, ?, ?, ?)";
     private static final int INDEX_CP = 2;
     private static final String QUERY_ALL_POKEMON = "SELECT * FROM " + TABLE_POKEMON;
-    private PreparedStatement createStackTable;
     private static final String CREATE_STACK_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STACK + " (\n" +
             COLUMN_POKEMON_NAME + " text NOT NULL, \n" +
             COLUMN_CP + " integer)\n";
@@ -143,21 +136,6 @@ public class DataSource {
             if(conn != null) {
                 conn.close();
             }
-            if(insertIntoStack != null) {
-                insertIntoStack.close();
-            }
-            if(removeFromStack != null) {
-                removeFromStack.close();
-            }
-            if(createRewardTable != null) {
-                createRewardTable.close();
-            }
-            if(queryPokemonTableForRewards != null) {
-                queryPokemonTableForRewards.close();
-            }
-            if(createStackTable != null) {
-                createStackTable.close();
-            }
         } catch(SQLException e) {
             System.out.println("Unable to close connection: " + e.getMessage());
         }
@@ -194,16 +172,17 @@ public class DataSource {
                 if(pokemon == null) {
                     pokemon = legacyResearchRewards.get(pokemonName);
                     if(pokemon == null) {
-                        queryPokemonTableForRewards = conn.prepareStatement(QUERY_FOR_FILLING_REWARDS_PREPARED);
-                        queryPokemonTableForRewards.setString(INDEX_POKEMON_NAME, pokemonName);
-                        try (ResultSet newResults = queryPokemonTableForRewards.executeQuery()){
-                            int pokedexNumber = newResults.getInt(COLUMN_POKEDEX_NUMBER);
-                            int baseAttack = newResults.getInt(COLUMN_BASE_ATTACK);
-                            int baseDefense = newResults.getInt(COLUMN_BASE_DEFENSE);
-                            int baseStamina = newResults.getInt(COLUMN_BASE_STAMINA);
-                            pokemon = new Pokemon(pokedexNumber, pokemonName, baseAttack, baseDefense, baseStamina);
-                        } catch(SQLException f) {
-                            System.out.println("Error finding " + pokemonName + ": " + f.getMessage());
+                        try (PreparedStatement queryPokemonTableForRewards = conn.prepareStatement(QUERY_FOR_FILLING_REWARDS_PREPARED)) {
+                            queryPokemonTableForRewards.setString(INDEX_POKEMON_NAME, pokemonName);
+                            try (ResultSet newResults = queryPokemonTableForRewards.executeQuery()) {
+                                int pokedexNumber = newResults.getInt(COLUMN_POKEDEX_NUMBER);
+                                int baseAttack = newResults.getInt(COLUMN_BASE_ATTACK);
+                                int baseDefense = newResults.getInt(COLUMN_BASE_DEFENSE);
+                                int baseStamina = newResults.getInt(COLUMN_BASE_STAMINA);
+                                pokemon = new Pokemon(pokedexNumber, pokemonName, baseAttack, baseDefense, baseStamina);
+                            } catch (SQLException f) {
+                                System.out.println("Error finding " + pokemonName + ": " + f.getMessage());
+                            }
                         }
                     }
                 }
