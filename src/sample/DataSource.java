@@ -29,25 +29,16 @@ public class DataSource {
     // this is only used to pull the Pokemon from thesilphroad.com, which already accounts for that and only uses
     // pokedex numbers for Pokemon that do not share their pokedex numbers.
     private final Map<Integer, Pokemon> researchRewardsPokedexValue = new TreeMap<>();
-    private final Map<Integer, Pokemon> legacyResearchRewardsPokedexValue = new LinkedHashMap<>();
     private int stardustValue = 0;
-
-    // Steps to add new Pokemon to currently available research rewards:
-    // 1. Insert pokemon name, pokedex number, attack, defense, and stamina to either rewards table (research or legacy)
-    // 2. Insert Pokemon's stats into main pokemon table if missing (Gen 5 and later)
-    // 3. Claim (legacy) reward and the Pokemon should now be available
-    // If you encounter an error after adding a new Pokemon, it's most likely a skipped step above,
-    // especially a NullPointerException.
-    // Will add stardust value to SQL table so it doesn't need to be hardcoded into the Pokemon class later.
-    /*
-    The above steps were for an older version of the app that had all of the reward names hardcoded rather than in the SQL database.
-    This was also prior to implementing the web scraping for TSR (for current rewards) and Pokemon GO Fandom (for legacy rewards).
-     */
 
     // Initializing all of the SQLite constants.
     private static final String DB_NAME = "Pokemon.db";
     private static final String CONNECTION_STRING = "jdbc:sqlite:C:/Users/festi/IdeaProjects/Stacker JavaFX2/src/" + DB_NAME;
+
     private static final String TABLE_POKEMON = "pokemon";
+    private static final String TABLE_RESEARCH_REWARDS = "rewards";
+    private static final String TABLE_LEGACY_REWARDS = "legacy_rewards";
+
     private static final String COLUMN_POKEMON_NAME = "pokemon_name";
     private static final String COLUMN_POKEDEX_NUMBER = "pokedex_number";
     private static final String COLUMN_BASE_ATTACK = "attack";
@@ -58,8 +49,6 @@ public class DataSource {
     private static final int INDEX_BASE_ATTACK = 3;
     private static final int INDEX_BASE_DEFENSE = 4;
     private static final int INDEX_BASE_STAMINA = 5;
-    private static final String TABLE_RESEARCH_REWARDS = "rewards";
-    private static final String TABLE_LEGACY_REWARDS = "legacy_rewards";
     private static final String COLUMN_CP = "CP";
     private static final String TABLE_STACK = "stack";
     private static final String CREATE_POKEMON_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_POKEMON + " (\n" +
@@ -83,23 +72,8 @@ public class DataSource {
     private static final String REMOVE_TOP_STACK = "DELETE FROM " + TABLE_STACK + " WHERE ROWID in (SELECT ROWID FROM " + TABLE_STACK + " LIMIT 1)";
     private static final String REMOVE_ALL_STACK = "DELETE FROM " + TABLE_STACK;
 
-    private static final String INSERT_REWARD = "INSERT INTO " + TABLE_RESEARCH_REWARDS + " (" + COLUMN_POKEMON_NAME + ", " +
-            COLUMN_POKEDEX_NUMBER + ", " + COLUMN_BASE_ATTACK + ", " +
-            COLUMN_BASE_DEFENSE + ", " + COLUMN_BASE_STAMINA + ") VALUES(?, ?, ?, ?, ?)";
-    private static final String INSERT_LEGACY_REWARD = "INSERT INTO " + TABLE_LEGACY_REWARDS + " (" + COLUMN_POKEMON_NAME + ", " +
-            COLUMN_POKEDEX_NUMBER + ", " + COLUMN_BASE_ATTACK + ", " +
-            COLUMN_BASE_DEFENSE + ", " + COLUMN_BASE_STAMINA + ") VALUES(?, ?, ?, ?, ?)";
     private static final int INDEX_CP = 2;
     private static final String QUERY_ALL_POKEMON = "SELECT * FROM " + TABLE_POKEMON;
-    private static final String CREATE_STACK_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STACK + " (\n" +
-            COLUMN_POKEMON_NAME + " text NOT NULL, \n" +
-            COLUMN_CP + " integer)\n";
-    private static final String CREATE_RESEARCH_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_RESEARCH_REWARDS + " (\n" +
-            COLUMN_POKEMON_NAME + " text NOT NULL PRIMARY KEY, \n" +
-            COLUMN_POKEDEX_NUMBER + " integer,\n" +
-            COLUMN_BASE_ATTACK + " integer,\n" +
-            COLUMN_BASE_DEFENSE + " integer,\n" +
-            COLUMN_BASE_STAMINA + " integer)\n";
 
     private static DataSource instance = new DataSource();
 
@@ -228,7 +202,6 @@ public class DataSource {
                     researchRewardsPokedexValue.put(pokedexNum, newPokemon);
                 } else {
                     legacyResearchRewards.put(pokemonName, newPokemon);
-                    legacyResearchRewardsPokedexValue.put(pokedexNum, newPokemon);
                 }
                 count--;
             }
@@ -380,9 +353,6 @@ public class DataSource {
     }
 
     public Pokemon getPokemon(int pokedexNumber) {
-        // Returns null if the Pokemon is new and not found in research rewards.
-        // How can I get a Pokemon using its Pokedex number if I haven't previously loaded it into rewards?
-        // The only way is to pull it from SQL.
         return researchRewardsPokedexValue.get(pokedexNumber);
     }
 
