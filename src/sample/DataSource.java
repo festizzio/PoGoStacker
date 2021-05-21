@@ -5,9 +5,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 
 import java.io.*;
 import java.sql.*;
@@ -64,7 +61,7 @@ public class DataSource {
 
     private static final String INSERT_STACK = "INSERT INTO " + TABLE_STACK + " (" + COLUMN_POKEMON_NAME + ", " +
             COLUMN_CP + ") VALUES(?, ?)";
-    private static final String QUERY_FOR_FILLING_REWARDS_PREPARED = "SELECT * FROM " + TABLE_POKEMON + " WHERE " +
+    private static final String QUERY_FOR_FILLING_REWARDS = "SELECT * FROM " + TABLE_POKEMON + " WHERE " +
             COLUMN_POKEMON_NAME + " = ?";
     private static final String QUERY_RESEARCH_POKEMON = "SELECT * FROM " + TABLE_RESEARCH_REWARDS + " ORDER BY " + COLUMN_POKEDEX_NUMBER;
     private static final String QUERY_LEGACY_POKEMON = "SELECT * FROM " + TABLE_LEGACY_REWARDS;
@@ -73,7 +70,6 @@ public class DataSource {
     private static final String REMOVE_ALL_STACK = "DELETE FROM " + TABLE_STACK;
 
     private static final int INDEX_CP = 2;
-    private static final String QUERY_ALL_POKEMON = "SELECT * FROM " + TABLE_POKEMON;
 
     private static DataSource instance = new DataSource();
 
@@ -146,7 +142,7 @@ public class DataSource {
                 if(pokemon == null) {
                     pokemon = legacyResearchRewards.get(pokemonName);
                     if(pokemon == null) {
-                        try (PreparedStatement queryPokemonTableForRewards = conn.prepareStatement(QUERY_FOR_FILLING_REWARDS_PREPARED)) {
+                        try (PreparedStatement queryPokemonTableForRewards = conn.prepareStatement(QUERY_FOR_FILLING_REWARDS)) {
                             queryPokemonTableForRewards.setString(INDEX_POKEMON_NAME, pokemonName);
                             try (ResultSet newResults = queryPokemonTableForRewards.executeQuery()) {
                                 int pokedexNumber = newResults.getInt(COLUMN_POKEDEX_NUMBER);
@@ -211,10 +207,6 @@ public class DataSource {
             e.printStackTrace();
 
         }
-    }
-
-    public void downloadAllSprites() {
-        fillList(QUERY_ALL_POKEMON);
     }
 
     public void fillList(String QUERY_RESEARCH) {

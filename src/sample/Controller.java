@@ -178,13 +178,6 @@ public class Controller {
                 System.out.println("Error re-opening and loading research rewards");
             }
         }
-
-//        Optional<ButtonType> result = dialog.showAndWait();
-//
-//        if(result.isPresent() && result.get() == ButtonType.OK) {
-//            PokemonUpdate.getInstance().updateRewardsTable();
-//            DataSource.getInstance().loadResearchRewardsFromSql();
-//        }
     }
 
     public void updateLegacyResearchTable() {
@@ -206,16 +199,6 @@ public class Controller {
 
     public void updateSqlDb() {
         DataSource.getInstance().writeToSQLFullPokemon();
-    }
-
-    public void downloadAllSprites() {
-        Alert updateAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        updateAlert.setContentText("Are you sure you want to download ALL sprites? \n" +
-                "This will download from pokemongodb.net.");
-        Optional<ButtonType> result = updateAlert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            DataSource.getInstance().downloadAllSprites();
-        }
     }
 
     public void showLoadingError() {
