@@ -26,14 +26,6 @@ public class Controller {
     private Label totalPokemon;
     @FXML
     private Label stardustValue;
-    @FXML
-    private Button claimRewardButton;
-    @FXML
-    private Button claimLegacyButton;
-    @FXML
-    private Button catchRewardButton;
-    @FXML
-    private Button catchAllRewardsButton;
 
     @FXML
     private void loadRewardDialog() {
