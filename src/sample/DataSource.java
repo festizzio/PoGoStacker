@@ -12,9 +12,10 @@ import java.util.*;
 
 public class DataSource {
 
-    // The stack is an ObservableList so we can bind it to the stack table view in the main controller window.
+    // Stack changed from ObservableList to standard LinkedList, but is exposed to the view as an ObservableList.
+    // This allows for easier portability to other frameworks like Spring Boot, etc.
     // The Pokemon currently in the stack are loaded from the database at startup and added to this list.
-    private final ObservableList<Pokemon> stack = FXCollections.observableList(new LinkedList<>());
+    private final LinkedList<Pokemon> stack = new LinkedList<>();
 
     // Current rewards and legacy rewards are separated so we can create multiple dialogs later.
     // They are tree maps so they are sorted alphabetically.
@@ -28,7 +29,7 @@ public class DataSource {
     private final Map<Integer, Pokemon> researchRewardsPokedexValue = new TreeMap<>();
     private int stardustValue = 0;
 
-    // Initializing all of the SQLite constants.
+    // Initializing all of the SQLite constants so if we must change them, we only have to change them in one place.
     private static final String DB_NAME = "Pokemon.db";
     private static final String CONNECTION_STRING = "jdbc:sqlite:C:/Users/festi/IdeaProjects/Stacker JavaFX2/src/" + DB_NAME;
 
@@ -157,13 +158,9 @@ public class DataSource {
                     }
                 }
                 if(pokemon != null) {
-                    if (!pokemon.setCP(CP)) {
-                        System.out.println("Error setting CP for " + pokemonName + ": CP of " + CP + " is invalid.");
-                        break;
-                    } else {
-                        stack.add(pokemon);
-                        stardustValue += pokemon.getStardustValue();
-                    }
+                    pokemon.setCP(CP);
+                    stack.add(pokemon);
+                    stardustValue += pokemon.getStardustValue();
                 } else {
                     System.out.println("Error setting CP for Pokemon. Pokemon not found.");
                 }
@@ -275,7 +272,7 @@ public class DataSource {
     }
 
     public ObservableList<Pokemon> getStack() {
-        return stack;
+        return FXCollections.observableList(stack);
     }
 
     public void setStackStardustValue(int stardust) {

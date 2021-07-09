@@ -28,7 +28,7 @@ public class AddRewardDialogController {
     public void initialize() {
 //        rewardGridPane = DataSource.getInstance().generateToggleButtons(researchList, rewardGridPane, cpListView, buttonToggleGroup);
 //        generateToggleButtons(researchList);
-        generateToggleButtons(researchList, 6);
+        generateToggleButtons(researchList, 10);
     }
 
     public boolean processResults() {
