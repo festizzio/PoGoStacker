@@ -201,21 +201,7 @@ public class PokemonUpdate {
                     Attributes nameAttributes = nameElement.attributes();
                     if (nameAttributes.hasDeclaredValueForKey("alt")) {
                         String nameFromAltAttribute = nameAttributes.get("alt");
-                        if (nameFromAltAttribute.contains("Spinda")) {
-                            nameFromAltAttribute = "Spinda";
-                        } else if (nameFromAltAttribute.contains("Eevee")) {
-                            nameFromAltAttribute = "Eevee";
-                        } else if (nameFromAltAttribute.contains("Pikachu")) {
-                            nameFromAltAttribute = "Pikachu";
-                        } else if (nameFromAltAttribute.contains("Squirtle")) {
-                            nameFromAltAttribute = "Squirtle";
-                        } else if (nameFromAltAttribute.contains("Cherrim")) {
-                            nameFromAltAttribute = "Cherrim";
-                        } else if (nameFromAltAttribute.matches(".+\\u2642")) {
-                            nameFromAltAttribute = "M Nidoran";
-                        } else if (nameFromAltAttribute.matches(".+\\u2640")) {
-                            nameFromAltAttribute = "F Nidoran";
-                        }
+                        nameFromAltAttribute = simplifyName(nameFromAltAttribute);
 
                         if(!newPokemonSet.contains(nameFromAltAttribute)) {
                             if(legacyPokemonSet.add(nameFromAltAttribute)) {
@@ -245,6 +231,23 @@ public class PokemonUpdate {
     };
 
     Thread updateThread = new Thread(updateTask);
+
+    private String simplifyName(String nameToSimplify) {
+        List<String> nameValues = Arrays.asList("Spinda", "Eeevee", "Pikachu",
+                "Squirtle", "Cherrim");
+        for(String name : nameValues) {
+            if(nameToSimplify.contains(name)) {
+                return name;
+            }
+        }
+        if (nameToSimplify.matches(".+\\u2642")) {
+            return "M Nidoran";
+        } else if (nameToSimplify.matches(".+\\u2640")) {
+            return "F Nidoran";
+        }
+
+        return nameToSimplify;
+    }
 
     public boolean checkThreadStatus() {
         return updateThread.isAlive();
