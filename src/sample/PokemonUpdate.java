@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.List;
 
-import javafx.application.Platform;
+import Model.DataSource;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -125,7 +125,7 @@ public class PokemonUpdate {
 
             // Increments can go up to 100, since the maximum number of updates per list is 50.
             // Current rewards never go over 30-40 unique so the limit of 50 is mainly for legacy rewards.
-            double incrementProgress = 0.01;
+            double incrementProgress = 0.008;
             try(PreparedStatement deleteResearch = conn.prepareStatement(DELETE_RESEARCH_TABLE)) {
                 deleteResearch.execute();
             } catch(SQLException e) {

@@ -1,5 +1,6 @@
 package sample;
 
+import Model.DataSource;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -53,7 +54,7 @@ public class AddRewardDialogController {
             for(int j = 0; j < numColumns; j++) {
                 // Quit if the number of buttons equals or excees the size of the list, or if it reaches 50 total buttons.
                 // This prevents crowding of the legacy list and nobody keeps unclaimed rewards that long anyway.
-                if(count >= rewardList.size() || count >= 50) {
+                if(count >= rewardList.size() || count >= 60) {
                     quitOuterLoop = true;
                     break;
                 } else {

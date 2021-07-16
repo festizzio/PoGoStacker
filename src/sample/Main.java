@@ -1,5 +1,6 @@
 package sample;
 
+import Model.DataSource;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -7,25 +8,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-// Where do I go after this?
-// I had a solid plan, a concrete road ahead of me, but now that the class is finished and this project is wrapping up,
-// I don't know where to go next.
-// Do I move onto Android? If so, Java or Kotlin? Do I continue making things but using the techniques I already know?
-// Unity? Objective-C for iOS? Or Swift? React? JavaScript and HTML?
-// How do I know which new techniques to use if they're new to me? How can I use tech of which I am unaware?
-// For now, continue with savings goal app since that is actually useful and something I can use now.
-// Is this really all I have to do? Continue making applications and add more to them until they have lots of capabilities?
-
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../View/sample.fxml"));
 
         Parent root = loader.load();
         primaryStage.setTitle("Pokemon Stack");
         primaryStage.setScene(new Scene(root, 500, 600));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

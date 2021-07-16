@@ -43,7 +43,7 @@ public class Pokemon {
         this.maxCP = possibleCPValues.get(possibleCPValues.size() - 1);
 
         final List<String> stage1EvoName = Arrays.asList("Graveler", "Rhydon", "Poliwhirl", "Monferno",
-                "Combusken", "Porygon2", "Raichu", "Skiploom", "Loudred", "Umbreon");
+                "Combusken", "Porygon2", "Raichu", "Skiploom", "Loudred", "Umbreon", "Azumarill");
         final List<String> stage2EvoName = Arrays.asList("Venusaur", "Charizard");
         if(stage2EvoName.contains(name)) {
             stardustValue = 500;

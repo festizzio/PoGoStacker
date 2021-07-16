@@ -1,16 +1,12 @@
 package sample;
 
+import Model.DataSource;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 
 
 import java.io.IOException;
@@ -86,7 +82,7 @@ public class Controller {
         dialog.setTitle("Claim New Reward");
         FXMLLoader loader = new FXMLLoader();
 
-        loader.setLocation(getClass().getResource(view + ".fxml"));
+        loader.setLocation(getClass().getResource("../View/" + view + ".fxml"));
 
         try {
             dialog.getDialogPane().setContent(loader.load());
@@ -137,7 +133,7 @@ public class Controller {
             updateDialog.setTitle("Updating Rewards Lists");
             FXMLLoader loader = new FXMLLoader();
 
-            loader.setLocation(getClass().getResource("pokemonUpdateDialog.fxml"));
+            loader.setLocation(getClass().getResource("../View/pokemonUpdateDialog.fxml"));
 
             try {
                 updateDialog.getDialogPane().setContent(loader.load());

@@ -1,10 +1,12 @@
-package sample;
+package Model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import sample.Pokemon;
+import sample.PokemonUpdate;
 
 import java.io.*;
 import java.sql.*;
@@ -175,17 +177,17 @@ public class DataSource {
     // Writes research table from the full list using the list of current rewards.
     // For now, it pulls from hardcoded lists but ideally this will be in a SQL table in the future.
     public void loadResearchRewardsFromSql() {
-        fillList(QUERY_RESEARCH_POKEMON, false);
-        fillList(QUERY_LEGACY_POKEMON, true);
+        loadRewardsUsingQuery(QUERY_RESEARCH_POKEMON, false);
+        loadRewardsUsingQuery(QUERY_LEGACY_POKEMON, true);
 
     }
 
-    private void fillList(String QUERY_RESEARCH, boolean isLegacy) {
+    private void loadRewardsUsingQuery(String QUERY_RESEARCH, boolean isLegacy) {
         try (PreparedStatement statement = conn.prepareStatement(QUERY_RESEARCH);
              ResultSet results = statement.executeQuery()) {
 
-            int count = 50;
-            while(results.next() && count > 0) {
+            int count = 0;
+            while(results.next() && count < 60) {
                 String pokemonName = results.getString(INDEX_POKEMON_NAME);
                 int pokedexNum = results.getInt(INDEX_POKEDEX_NUMBER);
                 Pokemon newPokemon = new Pokemon(pokedexNum, pokemonName,
@@ -196,7 +198,7 @@ public class DataSource {
                 } else {
                     legacyResearchRewards.put(pokemonName, newPokemon);
                 }
-                count--;
+                count++;
             }
 
         } catch(SQLException e) {
@@ -206,7 +208,7 @@ public class DataSource {
         }
     }
 
-    public void fillList(String QUERY_RESEARCH) {
+    public void loadRewardsUsingQuery(String QUERY_RESEARCH) {
         List<String> spriteList = new ArrayList<>();
         try (Statement statement = conn.createStatement()) {
             try(ResultSet results = statement.executeQuery(QUERY_RESEARCH)) {
