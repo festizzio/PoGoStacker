@@ -224,6 +224,15 @@ public class PokemonUpdate {
                     rollbackError.setContentText("Unable to rollback data changes. BIG DANGER");
                 }
             }
+            try {
+                DataSource.getInstance().reopen();
+                updateMessage("Reopening Database...");
+                updateProg += incrementProgress;
+                updateProgress(updateProg, 1);
+                Thread.sleep(1000);
+            } catch(InterruptedException e) {
+                updateMessage("Interrupted while waiting for database to reopen!");
+            }
             updateProgress(1, 1);
             updateMessage("Finished updating rewards!");
             return null;

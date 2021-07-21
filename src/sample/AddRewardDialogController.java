@@ -19,8 +19,7 @@ public class AddRewardDialogController {
     @FXML
     private GridPane rewardGridPane;
 
-    private final ObservableList<String> researchList = FXCollections.observableList(new ArrayList<>(
-            DataSource.getInstance().getResearchRewards().keySet())).sorted();
+    private ObservableList<String> researchList;
 
     @FXML
     protected ListView<Integer> cpListView = new ListView<>();
@@ -29,6 +28,8 @@ public class AddRewardDialogController {
     public void initialize() {
 //        rewardGridPane = DataSource.getInstance().generateToggleButtons(researchList, rewardGridPane, cpListView, buttonToggleGroup);
 //        generateToggleButtons(researchList);
+        researchList = FXCollections.observableList(new ArrayList<>(
+                DataSource.getInstance().getResearchRewards().keySet())).sorted();
         generateToggleButtons(researchList, 10);
     }
 

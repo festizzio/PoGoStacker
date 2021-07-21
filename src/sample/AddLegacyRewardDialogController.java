@@ -9,13 +9,14 @@ import java.util.ArrayList;
 
 public class AddLegacyRewardDialogController extends AddRewardDialogController {
 
-    private final ObservableList<String> legacyList = FXCollections.observableList(new ArrayList<>(
-            DataSource.getInstance().getLegacyResearchRewards().keySet())).sorted();
+    private ObservableList<String> legacyList;
 
     @FXML
     public void initialize() {
 //        legacyGridPane = DataSource.getInstance().generateToggleButtons(legacyList, legacyGridPane, cpListView, buttonToggleGroup);
 //        generateToggleButtons(legacyList);
+        legacyList = FXCollections.observableList(new ArrayList<>(
+                DataSource.getInstance().getLegacyResearchRewards().keySet())).sorted();
         generateToggleButtons(legacyList, 10);
     }
 }
