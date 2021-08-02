@@ -1,4 +1,4 @@
-package sample;
+package Controller;
 
 import Model.DataSource;
 import org.junit.jupiter.api.Test;

@@ -5,8 +5,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import sample.Pokemon;
-import sample.PokemonUpdate;
+import Controller.Pokemon;
+import Controller.PokemonUpdate;
 
 import java.io.*;
 import java.sql.*;
@@ -86,22 +86,19 @@ public class DataSource {
     }
 
     public boolean open() {
-        try {
-            conn = DriverManager.getConnection(CONNECTION_STRING);
-            loadResearchRewardsFromSql();
+        if(reopen()) {
             loadStack();
             try {
                 conn.setAutoCommit(false);
-            } catch(SQLException g) {
+            } catch (SQLException g) {
                 Alert autoCommitError = new Alert(Alert.AlertType.ERROR);
                 autoCommitError.setContentText("Error setting connection's autoCommit to false.");
                 return false;
             }
             return true;
-        } catch(SQLException e) {
-            System.out.println("Error opening database");
-            return false;
         }
+        System.out.println("Error opening database");
+        return false;
     }
 
     public void close() {

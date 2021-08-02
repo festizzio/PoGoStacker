@@ -1,9 +1,8 @@
-package sample;
+package Controller;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.ToggleButton;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package sample;
+package Controller;
 
 import Model.DataSource;
 import javafx.application.Application;
@@ -7,6 +7,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+// Where should I put the code to generate the toggle buttons?
+// Ideally, it should be done once when the program first starts up, and
+// once every time the updateTask in PokemonUpdate is run.
 
 public class Main extends Application {
 
