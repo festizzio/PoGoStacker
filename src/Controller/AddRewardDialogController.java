@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.DataSource;
+import Model.PokemonGridPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,22 +14,23 @@ import java.util.*;
 
 public class AddRewardDialogController {
 
+    public static final int MAX_NUM_POKEMON_IN_DIALOG = 60;
+
     @FXML
     protected ToggleGroup buttonToggleGroup = new ToggleGroup();
 
     @FXML
     private GridPane rewardGridPane;
 
-    private ObservableList<String> researchList;
-
     @FXML
     protected ListView<Integer> cpListView = new ListView<>();
 
     @FXML
     public void initialize() {
+
 //        rewardGridPane = DataSource.getInstance().generateToggleButtons(researchList, rewardGridPane, cpListView, buttonToggleGroup);
 //        generateToggleButtons(researchList);
-        researchList = FXCollections.observableList(new ArrayList<>(
+        List<String> researchList = FXCollections.observableList(new ArrayList<>(
                 DataSource.getInstance().getResearchRewards().keySet())).sorted();
         generateToggleButtons(researchList, 10);
     }
@@ -48,14 +50,14 @@ public class AddRewardDialogController {
         return true;
     }
 
-    public void generateToggleButtons(ObservableList<String> rewardList, int numColumns) {
+    public void generateToggleButtons(List<String> rewardList, int numColumns) {
         int count = 0;
         boolean quitOuterLoop = false;
         for(int i = 0; i <= (rewardList.size() / numColumns); i++) {
             for(int j = 0; j < numColumns; j++) {
                 // Quit if the number of buttons equals or excees the size of the list, or if it reaches 50 total buttons.
                 // This prevents crowding of the legacy list and nobody keeps unclaimed rewards that long anyway.
-                if(count >= rewardList.size() || count >= 60) {
+                if(count >= rewardList.size() || count >= MAX_NUM_POKEMON_IN_DIALOG) {
                     quitOuterLoop = true;
                     break;
                 } else {

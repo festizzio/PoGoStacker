@@ -1,15 +1,18 @@
 package Controller;
 
 import Model.DataSource;
+import Model.PokemonGridPane;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class Controller {
@@ -36,6 +39,8 @@ public class Controller {
     private Dialog<ButtonType> updateDialog;
     private PokemonUpdate updateController;
     private ButtonType closeWindowButton;
+    private Dialog<ButtonType> addRewardDialog;
+    private Dialog<ButtonType> addLegacyRewardDialog;
 
     @FXML
     public void initialize() {
@@ -118,6 +123,15 @@ public class Controller {
                 break;
             }
         }
+    }
+
+    public void createAddRewardDialog(String view) {
+        addRewardDialog = new Dialog<>();
+        addRewardDialog.initOwner(mainBorderPane.getScene().getWindow());
+        addRewardDialog.setTitle("Claim new reward");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("../View/" + view + ".fxml"));
+
     }
 
     public void updateResearchTable() {

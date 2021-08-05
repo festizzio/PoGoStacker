@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Stacker JavaFX2.iml" filepath="$PROJECT_DIR$/Stacker JavaFX2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Stack it up!.iml" filepath="$PROJECT_DIR$/Stack it up!.iml" />
     </modules>
   </component>
 </project>

@@ -146,14 +146,9 @@ public class PokemonUpdate {
                                 try {
                                     int pokedexNum = Integer.parseInt(sFileNameOnly);
                                     if(DataSource.getInstance().getPokemon(pokedexNum) == null) {
-                                        // Was somehow getting an index 1 out of bounds for length 1 in the below try/catch block
-                                        // Found it after digging in the debugger and adding the block.
-                                        // In total, it catches the IndexOutOfBoundsException 5-6 times or so.
-                                        try {
-                                            fillRewardsStatement.setInt(1, pokedexNum);
-                                        } catch(IndexOutOfBoundsException ie) {
-                                            ie.printStackTrace();
-                                        }
+
+                                        fillRewardsStatement.setInt(1, pokedexNum);
+
                                         try (ResultSet rewardResult = fillRewardsStatement.executeQuery()) {
                                             if(rewardResult.next()) {
                                                 newPokemonName = rewardResult.getString(INDEX_POKEMON_NAME);
@@ -196,7 +191,8 @@ public class PokemonUpdate {
             try (Statement statement = conn.createStatement()) {
                 statement.execute(DELETE_LEGACY_TABLE);
                 Elements legacyRewards = legacy.getElementsByAttributeValue("width", "100");
-                for(int i = legacyRewards.size() - 1; legacyPokemonSet.size() < 50; i--) {
+                for(int i = legacyRewards.size() - 1; legacyPokemonSet.size() <
+                        AddRewardDialogController.MAX_NUM_POKEMON_IN_DIALOG; i--) {
                     Element nameElement = legacyRewards.get(i);
                     Attributes nameAttributes = nameElement.attributes();
                     if (nameAttributes.hasDeclaredValueForKey("alt")) {
