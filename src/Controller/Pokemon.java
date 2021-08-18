@@ -71,11 +71,9 @@ public class Pokemon {
 
     private void calculatePossibleCPValues() {
         int CP;
-        IvValues currentIVs;
         List<IvValues> listOfIvValues;
         // IV floor for research tasks is 10/10/10
-        for(int i = 0; i < ivList.size(); i++) {
-            currentIVs = ivList.get(i);
+        for(IvValues currentIVs : ivList) {
             int attackIV = (int) currentIVs.getAttackIV();
             int defenseIV = (int) currentIVs.getDefenseIV();
             int staminaIV = (int) currentIVs.getStaminaIV();
