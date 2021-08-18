@@ -22,6 +22,7 @@ public class Pokemon {
     private final int maxCP;
     private final int stardustValue;
     private final Map<Integer, List<IvValues>> mapOfIvValues;
+    private static final List<IvValues> ivList = calculateListOfIVs();
 
     private String spriteFileName;
 
@@ -55,32 +56,43 @@ public class Pokemon {
         spriteFileName = name.toLowerCase() + ".png";
     }
 
+    private static List<IvValues> calculateListOfIVs() {
+        List<IvValues> ivValues = new ArrayList<>();
+        for(int attackIV = 10; attackIV <= 15; attackIV++) {
+            for (int defenseIV = 10; defenseIV <= 15; defenseIV++) {
+                for (int staminaIV = 10; staminaIV <= 15; staminaIV++) {
+                    ivValues.add(new IvValues(attackIV, defenseIV, staminaIV));
+                }
+            }
+        }
+
+        return ivValues;
+    }
+
     private void calculatePossibleCPValues() {
         int CP;
         IvValues currentIVs;
         List<IvValues> listOfIvValues;
         // IV floor for research tasks is 10/10/10
-        for(int attackIV = 10; attackIV <= 15; attackIV++) {
-            for (int defenseIV = 10; defenseIV <= 15; defenseIV++) {
-                for (int staminaIV = 10; staminaIV <= 15; staminaIV++) {
+        for(int i = 0; i < ivList.size(); i++) {
+            currentIVs = ivList.get(i);
+            int attackIV = (int) currentIVs.getAttackIV();
+            int defenseIV = (int) currentIVs.getDefenseIV();
+            int staminaIV = (int) currentIVs.getStaminaIV();
 
-                    CP = calculateCP(attackIV, defenseIV, staminaIV);
+            CP = calculateCP(attackIV, defenseIV, staminaIV);
+            listOfIvValues = new ArrayList<>();
 
-                    currentIVs = new IvValues(attackIV, defenseIV, staminaIV);
-                    listOfIvValues = new ArrayList<>();
-
-                    if(!mapOfIvValues.isEmpty()) {
-                        if(mapOfIvValues.containsKey(CP)) {
-                            listOfIvValues = mapOfIvValues.get(CP);
-                        }
-                    }
-
-                    listOfIvValues.add(currentIVs);
-
-                    listOfIvValues.sort(Comparator.comparingDouble(IvValues::getIvPercentage));
-                    mapOfIvValues.put(CP, listOfIvValues);
+            if(!mapOfIvValues.isEmpty()) {
+                if(mapOfIvValues.containsKey(CP)) {
+                    listOfIvValues = mapOfIvValues.get(CP);
                 }
             }
+
+            listOfIvValues.add(currentIVs);
+
+            listOfIvValues.sort(Comparator.comparingDouble(IvValues::getIvPercentage));
+            mapOfIvValues.put(CP, listOfIvValues);
         }
         fillPossibleCPValueList();
     }
