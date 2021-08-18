@@ -3,32 +3,33 @@ package Controller;
 import java.text.DecimalFormat;
 
 public class IvValues {
-    private final double attackIV;
-    private final double defenseIV;
-    private final double staminaIV;
+    private final int attackIV;
+    private final int defenseIV;
+    private final int staminaIV;
     private static final DecimalFormat df2 = new DecimalFormat("##.##");
     private final double IvPercentage;
 
-    public IvValues(double attackIV, double defenseIV, double staminaIV) {
+    public IvValues(int attackIV, int defenseIV, int staminaIV) {
         this.attackIV = attackIV;
         this.defenseIV = defenseIV;
         this.staminaIV = staminaIV;
-        IvPercentage = Double.parseDouble(df2.format((((attackIV + defenseIV + staminaIV) / 45) * 100)));
+        IvPercentage = Double.parseDouble(df2.format(((((double) attackIV + (double) defenseIV +
+                (double) staminaIV) / 45) * 100)));
     }
 
     public double getIvPercentage() {
         return IvPercentage;
     }
 
-    public double getAttackIV() {
+    public int getAttackIV() {
         return attackIV;
     }
 
-    public double getDefenseIV() {
+    public int getDefenseIV() {
         return defenseIV;
     }
 
-    public double getStaminaIV() {
+    public int getStaminaIV() {
         return staminaIV;
     }
 }

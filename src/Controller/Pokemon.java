@@ -74,9 +74,9 @@ public class Pokemon {
         List<IvValues> listOfIvValues;
         // IV floor for research tasks is 10/10/10
         for(IvValues currentIVs : ivList) {
-            int attackIV = (int) currentIVs.getAttackIV();
-            int defenseIV = (int) currentIVs.getDefenseIV();
-            int staminaIV = (int) currentIVs.getStaminaIV();
+            int attackIV = currentIVs.getAttackIV();
+            int defenseIV = currentIVs.getDefenseIV();
+            int staminaIV = currentIVs.getStaminaIV();
 
             CP = calculateCP(attackIV, defenseIV, staminaIV);
             listOfIvValues = new ArrayList<>();
