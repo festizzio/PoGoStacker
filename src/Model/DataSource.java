@@ -14,8 +14,6 @@ import java.util.*;
 
 public class DataSource {
 
-    // Stack changed from ObservableList to standard LinkedList, but is exposed to the view as an ObservableList.
-    // This allows for easier portability to other frameworks like Spring Boot, etc.
     // The Pokemon currently in the stack are loaded from the database at startup and added to this list.
     private final LinkedList<Pokemon> stack = new LinkedList<>();
 
