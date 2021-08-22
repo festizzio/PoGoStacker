@@ -183,23 +183,6 @@ public class Controller {
         }
     }
 
-    public void updateLegacyResearchTable() {
-        Alert updateAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        updateAlert.setContentText("Are you sure you want to update the legacy rewards? \n" +
-                "This will download from pokemongo.fandom.com");
-        Optional<ButtonType> result = updateAlert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            DataSource.getInstance().close();
-            PokemonUpdate.getInstance().updateLegacyRewardsTable();
-            if(DataSource.getInstance().reopen()) {
-                System.out.println("Successfully re-opened database");
-            } else {
-                System.out.println("FATAL ERROR: Couldn't re-open database after updating list");
-                Platform.exit();
-            }
-        }
-    }
-
     public void exitProgram() {
         Platform.exit();
     }
