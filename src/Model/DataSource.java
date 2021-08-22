@@ -27,7 +27,6 @@ public class DataSource {
     // this is only used to pull the Pokemon from thesilphroad.com, which already accounts for that and only uses
     // pokedex numbers for Pokemon that do not share their pokedex numbers.
     private final Map<Integer, Pokemon> researchRewardsPokedexValue = new TreeMap<>();
-    private int stardustValue = 0;
 
     // == SQLite constants ==
     private static final String DB_NAME = "Pokemon.db";
@@ -76,6 +75,7 @@ public class DataSource {
 
     private Connection conn;
 
+    private int stardustValue = 0;
     private final SimpleStringProperty stackStardustValue = new SimpleStringProperty();
     private final SimpleStringProperty stackNumPokemon = new SimpleStringProperty();
 

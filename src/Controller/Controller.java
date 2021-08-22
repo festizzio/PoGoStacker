@@ -200,10 +200,6 @@ public class Controller {
         }
     }
 
-    public void updateSqlDb() {
-        DataSource.getInstance().writeToSQLFullPokemon();
-    }
-
     public void showLoadingError() {
         Alert loadingAlert = new Alert(Alert.AlertType.ERROR);
         loadingAlert.setContentText("Cannot claim or catch rewards while updating!");
