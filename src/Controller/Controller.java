@@ -9,11 +9,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class Controller {
@@ -41,15 +39,12 @@ public class Controller {
     private PokemonUpdate updateController;
     private ButtonType closeWindowButton;
     private Dialog<ButtonType> addRewardDialog;
-    private Dialog<ButtonType> addLegacyRewardDialog;
 
     @FXML
     public void initialize() {
         stackTable.setItems(FXCollections.observableList(DataSource.getInstance().getStack()));
         stardustValue.textProperty().bind(DataSource.getInstance().getStackStardustValue());
         totalPokemon.textProperty().bind(DataSource.getInstance().getTotalPokemon());
-//        updateProgress.progressProperty().bind(updateTask.progressProperty());
-//        updateLabel.textProperty().bind(PokemonUpdate.getInstance().getProgressLabel());
     }
 
     @FXML
@@ -126,6 +121,7 @@ public class Controller {
         }
     }
 
+    // Will create a new branch to continue working on this.
     public void createAddRewardDialog(String view) {
         addRewardDialog = new Dialog<>();
         addRewardDialog.initOwner(mainBorderPane.getScene().getWindow());
