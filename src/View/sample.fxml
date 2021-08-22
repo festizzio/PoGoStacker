@@ -33,6 +33,9 @@
     </left>
     <right>
         <TableView fx:id="stackTable" prefHeight="300" prefWidth="350">
+            <placeholder>
+                <Label text="${'You don\'t have any Pokemon in your stack yet!\nClick \'Claim Reward\' or \'Claim Legacy Reward\' to get started.'}"/>
+            </placeholder>
             <columns>
                 <TableColumn prefWidth="120" text="Pokemon">
                     <cellValueFactory>
