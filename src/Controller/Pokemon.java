@@ -2,19 +2,21 @@ package Controller;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.fxml.FXML;
 
 import java.util.*;
 
 public class Pokemon {
 
-    @FXML
     private final int baseAttack;
     private final int baseDefense;
     private final int baseStamina;
     private final int pokedexNumber;
 
+    // == ObservableValue declarations for JavaFX ==
     private final SimpleStringProperty name;
+
+    // CP stands for Combat Power, an arbitrary calculation by Niantic to gauge the
+    // overall ability of the Pokemon in battle.
     private final SimpleIntegerProperty CP;
     private final SimpleStringProperty ivValuesPerCp;
     private final List<Integer> possibleCPValues;
@@ -42,6 +44,7 @@ public class Pokemon {
         this.minCP = possibleCPValues.get(0);
         this.maxCP = possibleCPValues.get(possibleCPValues.size() - 1);
 
+        // == initialize list of evolved Pokemon - these are worth extra stardust ==
         final List<String> stage1EvoName = Arrays.asList("Graveler", "Rhydon", "Poliwhirl", "Monferno",
                 "Combusken", "Porygon2", "Raichu", "Skiploom", "Loudred", "Umbreon", "Azumarill");
         final List<String> stage2EvoName = Arrays.asList("Venusaur", "Charizard");
@@ -56,6 +59,9 @@ public class Pokemon {
         spriteFileName = name.toLowerCase() + ".png";
     }
 
+    // Does this make sense here? Feel like it would fit better in DataSource.
+    // IV floor for research tasks is 10/10/10, and these values don't change between Pokemon.
+    // No reason to call it every time you instantiate a new Pokemon object.
     private static List<IvValues> calculateListOfIVs() {
         List<IvValues> ivValues = new ArrayList<>();
         for(int attackIV = 10; attackIV <= 15; attackIV++) {
@@ -65,20 +71,15 @@ public class Pokemon {
                 }
             }
         }
-
         return ivValues;
     }
 
     private void calculatePossibleCPValues() {
         int CP;
         List<IvValues> listOfIvValues;
-        // IV floor for research tasks is 10/10/10
         for(IvValues currentIVs : ivList) {
-            int attackIV = currentIVs.getAttackIV();
-            int defenseIV = currentIVs.getDefenseIV();
-            int staminaIV = currentIVs.getStaminaIV();
 
-            CP = calculateCP(attackIV, defenseIV, staminaIV);
+            CP = calculateCP(currentIVs.getAttackIV(), currentIVs.getDefenseIV(), currentIVs.getStaminaIV());
             listOfIvValues = new ArrayList<>();
 
             if(!mapOfIvValues.isEmpty()) {

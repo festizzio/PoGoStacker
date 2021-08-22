@@ -31,7 +31,7 @@ public class DataSource {
     private final Map<Integer, Pokemon> researchRewardsPokedexValue = new TreeMap<>();
     private int stardustValue = 0;
 
-    // Initializing all of the SQLite constants so if we must change them, we only have to change them in one place.
+    // == SQLite constants ==
     private static final String DB_NAME = "Pokemon.db";
     private static final String CONNECTION_STRING = "jdbc:sqlite:C:/Users/festi/IdeaProjects/Stacker JavaFX2/src/" + DB_NAME;
 
@@ -129,6 +129,7 @@ public class DataSource {
         return instance;
     }
 
+    // Load Pokemon stack from SQLite database.
     private void loadStack() {
         stack.clear();
         try(PreparedStatement statement = conn.prepareStatement(QUERY_STACK);
