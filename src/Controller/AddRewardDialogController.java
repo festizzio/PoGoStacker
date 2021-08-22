@@ -68,9 +68,9 @@ public class AddRewardDialogController {
 
                     button.setToggleGroup(buttonToggleGroup);
                     button.setUserData(pokemonName);
-                    button.setMaxWidth(Double.MAX_VALUE);
+                    button.setMaxWidth(100);
                     button.setMinWidth(pokemonName.length());
-                    button.setMaxHeight(Double.MAX_VALUE);
+                    button.setMaxHeight(100);
                     if(!(DataSource.getInstance().getResearchRewards().get(pokemonName) == null)) {
                         button.setOnAction(actionEvent -> cpListView.getItems().setAll(DataSource.getInstance()
                                 .getResearchRewards().get(pokemonName).getPossibleCPValues()));

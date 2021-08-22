@@ -127,8 +127,6 @@ public class Controller {
         addRewardDialog.initOwner(mainBorderPane.getScene().getWindow());
         addRewardDialog.setTitle("Claim new reward");
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../View/" + view + ".fxml"));
-
     }
 
     public void updateResearchTable() {
