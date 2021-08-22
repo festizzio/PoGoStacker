@@ -4,6 +4,7 @@ import Model.DataSource;
 import Model.PokemonGridPane;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -44,7 +45,7 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        stackTable.setItems(DataSource.getInstance().getStack());
+        stackTable.setItems(FXCollections.observableList(DataSource.getInstance().getStack()));
         stardustValue.textProperty().bind(DataSource.getInstance().getStackStardustValue());
         totalPokemon.textProperty().bind(DataSource.getInstance().getTotalPokemon());
 //        updateProgress.progressProperty().bind(updateTask.progressProperty());

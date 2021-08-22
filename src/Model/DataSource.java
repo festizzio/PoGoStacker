@@ -271,8 +271,8 @@ public class DataSource {
         return stackNumPokemon;
     }
 
-    public ObservableList<Pokemon> getStack() {
-        return FXCollections.observableList(stack);
+    public List<Pokemon> getStack() {
+        return stack;
     }
 
     public void setStackStardustValue(int stardust) {
