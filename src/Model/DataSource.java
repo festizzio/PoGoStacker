@@ -48,12 +48,9 @@ public class DataSource {
     private static final int INDEX_BASE_STAMINA = 5;
     private static final String COLUMN_CP = "CP";
     private static final String TABLE_STACK = "stack";
-    private static final String CREATE_POKEMON_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_POKEMON + " (\n" +
-            COLUMN_POKEMON_NAME + " text NOT NULL PRIMARY KEY, \n" +
-            COLUMN_POKEDEX_NUMBER + " integer,\n" +
-            COLUMN_BASE_ATTACK + " integer,\n" +
-            COLUMN_BASE_DEFENSE + " integer,\n" +
-            COLUMN_BASE_STAMINA + " integer)\n";
+    private static final String CREATE_STACK_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STACK + " (\n" +
+            COLUMN_POKEMON_NAME + " text NOT NULL, \n" +
+            COLUMN_CP + " integer NOT NULL)\n";
 
     private static final String INSERT_POKEMON = "INSERT INTO " + TABLE_POKEMON + " (" + COLUMN_POKEMON_NAME + ", " +
             COLUMN_POKEDEX_NUMBER + ", " + COLUMN_BASE_ATTACK + ", " +
@@ -129,6 +126,12 @@ public class DataSource {
 
     // Load Pokemon stack from SQLite database.
     private void loadStack() {
+        try (PreparedStatement statement = conn.prepareStatement(CREATE_STACK_TABLE)) {
+            statement.execute();
+        } catch(SQLException e) {
+            System.out.println("Error creating stack table: " + e.getMessage());
+            e.printStackTrace();
+        }
         stack.clear();
         try(PreparedStatement statement = conn.prepareStatement(QUERY_STACK);
             ResultSet results = statement.executeQuery()) {
