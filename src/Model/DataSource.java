@@ -290,57 +290,6 @@ public class DataSource {
         }
     }
 
-    /* The below method is used in the event of a stat rebalance, where the stat values are
-     ** arbitrarily changed to a new value (assuming it's not a flat calculation for all Pokemon).
-     ** Since we only care about the research table, we can usually add a few Pokemon manually to the db.
-     */
-
-    public void writeToSQLFullPokemon() {
-        try(Scanner pokeScanner = new Scanner(new BufferedReader(
-                new FileReader("C:\\Users\\festi\\IdeaProjects\\Stacker JavaFX2\\src\\Pokemon.txt")))) {
-
-            String pokemon;
-
-            try (Statement statement = conn.createStatement()) {
-                statement.execute(CREATE_POKEMON_TABLE);
-            } catch(SQLException e) {
-                System.out.println("SQL Exception, loading database, creating table, and writing prepared statement: " + e.getMessage());
-            }
-
-            while(pokeScanner.hasNextLine()) {
-                pokemon = pokeScanner.nextLine();
-                String[] pokemonData = pokemon.split("\t");
-                int pokedexNumber = Integer.parseInt(pokemonData[0]);
-                String pokemonName = pokemonData[1];
-                int baseAttack = Integer.parseInt(pokemonData[2]);
-                int baseDefense = Integer.parseInt(pokemonData[3]);
-                int baseStamina = Integer.parseInt(pokemonData[4]);
-
-                try {
-
-                    PreparedStatement createPokemonTable = conn.prepareStatement(INSERT_POKEMON);
-                    createPokemonTable.setString(INDEX_POKEMON_NAME, pokemonName);
-                    createPokemonTable.setInt(INDEX_POKEDEX_NUMBER, pokedexNumber);
-                    createPokemonTable.setInt(INDEX_BASE_ATTACK, baseAttack);
-                    createPokemonTable.setInt(INDEX_BASE_DEFENSE, baseDefense);
-                    createPokemonTable.setInt(INDEX_BASE_STAMINA, baseStamina);
-                    createPokemonTable.execute();
-                } catch(SQLException e) {
-                    System.out.println("Error writing " + pokemonName + ": " + e.getMessage());
-
-                }
-
-            }
-            try {
-                conn.commit();
-            } catch(SQLException f) {
-                System.out.println("Error committing changes in writeToSQLFullPokemon");
-            }
-        } catch(IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     public Pokemon getPokemon(int pokedexNumber) {
         return researchRewardsPokedexValue.get(pokedexNumber);
     }
