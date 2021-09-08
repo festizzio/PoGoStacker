@@ -1,7 +1,6 @@
-package Controller;
+package controller;
 
-import Model.DataSource;
-import Model.PokemonGridPane;
+import model.DataSource;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;

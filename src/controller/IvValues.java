@@ -1,7 +1,6 @@
-package Controller;
+package controller;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 public class IvValues {
     private final int attackIV;

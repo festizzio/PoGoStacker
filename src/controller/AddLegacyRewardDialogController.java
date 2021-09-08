@@ -1,6 +1,6 @@
-package Controller;
+package controller;
 
-import Model.DataSource;
+import model.DataSource;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 

@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.List;
 
-import Model.DataSource;
+import model.DataSource;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;

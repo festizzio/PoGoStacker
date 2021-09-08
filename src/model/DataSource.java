@@ -1,13 +1,12 @@
-package Model;
+package model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
-import Controller.Pokemon;
-import Controller.PokemonUpdate;
+import controller.Pokemon;
+import controller.PokemonUpdate;
 import util.SQLiteQueries;
 
-import java.io.*;
 import java.sql.*;
 import java.util.*;
 

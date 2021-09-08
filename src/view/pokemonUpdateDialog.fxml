@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="156.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PokemonUpdate">
+<AnchorPane prefHeight="156.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PokemonUpdate">
     <ProgressBar fx:id="updateProgressBar" layoutX="32.0" layoutY="74.0" prefHeight="18.0" prefWidth="235.0" />
     <Label fx:id="updateLabel" layoutX="32.0" layoutY="55.0" prefHeight="18.0" prefWidth="235.0" />
 </AnchorPane>

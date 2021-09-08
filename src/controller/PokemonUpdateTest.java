@@ -1,6 +1,6 @@
-package Controller;
+package controller;
 
-import Model.DataSource;
+import model.DataSource;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
