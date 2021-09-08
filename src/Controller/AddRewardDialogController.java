@@ -51,17 +51,15 @@ public class AddRewardDialogController {
     }
 
     public void generateToggleButtons(List<String> rewardList, int numColumns) {
-        int count = 0;
-        boolean quitOuterLoop = false;
-        for(int i = 0; i <= (rewardList.size() / numColumns); i++) {
-            for(int j = 0; j < numColumns; j++) {
-                // Quit if the number of buttons equals or excees the size of the list, or if it reaches 50 total buttons.
+        int row = 0;
+        int column = 0;
+        for(int i = 0; i < rewardList.size(); i++) {
+                // Quit if the number of buttons equals or excees the size of the list, or if it reaches MAX_NUM_POKEMON_IN_DIALOG total buttons.
                 // This prevents crowding of the legacy list and nobody keeps unclaimed rewards that long anyway.
-                if(count >= rewardList.size() || count >= MAX_NUM_POKEMON_IN_DIALOG) {
-                    quitOuterLoop = true;
+                if(i >= MAX_NUM_POKEMON_IN_DIALOG) {
                     break;
                 } else {
-                    String pokemonName = rewardList.get(count);
+                    String pokemonName = rewardList.get(i);
                     ToggleButton button = new ToggleButton("", new ImageView(
                             new Image("/sprites/" + pokemonName.toLowerCase() + ".png",
                                     50, 50, true, false)));
@@ -71,6 +69,8 @@ public class AddRewardDialogController {
                     button.setMaxWidth(100);
                     button.setMinWidth(pokemonName.length());
                     button.setMaxHeight(100);
+
+                    // Check if the Pokemon exists in current rewards, if not then it must be legacy.
                     if(!(DataSource.getInstance().getResearchRewards().get(pokemonName) == null)) {
                         button.setOnAction(actionEvent -> cpListView.getItems().setAll(DataSource.getInstance()
                                 .getResearchRewards().get(pokemonName).getPossibleCPValues()));
@@ -79,15 +79,17 @@ public class AddRewardDialogController {
                                 .getLegacyResearchRewards().get(pokemonName).getPossibleCPValues()));
                     }
 
-                    rewardGridPane.add(button, j, i);
-                    count++;
+                    rewardGridPane.add(button, column, row);
+                    // how to increment row and column?
+                    column++;
+                    if(column == numColumns) {
+                        row++;
+                        column = 0;
+                    }
                 }
             }
-            if(quitOuterLoop) {
-                System.out.println("Generated toggle buttons for " + rewardList.getClass().getSimpleName());
-                break;
-            }
-        }
+            System.out.println("Generated toggle buttons for " + rewardList.getClass().getSimpleName());
+
     }
 }
 

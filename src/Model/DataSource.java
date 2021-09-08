@@ -112,7 +112,8 @@ public class DataSource {
             loadResearchRewardsFromSql();
             return true;
         } catch(SQLException e) {
-            System.out.println("Error opening database");
+            System.out.println("Error opening database: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
