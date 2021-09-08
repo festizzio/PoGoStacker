@@ -6,16 +6,15 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddLegacyRewardDialogController extends AddRewardDialogController {
-
-    private ObservableList<String> legacyList;
-
+    
     @FXML
     public void initialize() {
 //        legacyGridPane = DataSource.getInstance().generateToggleButtons(legacyList, legacyGridPane, cpListView, buttonToggleGroup);
 //        generateToggleButtons(legacyList);
-        legacyList = FXCollections.observableList(new ArrayList<>(
+        List<String> legacyList = FXCollections.observableList(new ArrayList<>(
                 DataSource.getInstance().getLegacyResearchRewards().keySet())).sorted();
         generateToggleButtons(legacyList, 10);
     }
