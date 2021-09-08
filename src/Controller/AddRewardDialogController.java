@@ -88,7 +88,7 @@ public class AddRewardDialogController {
                     }
                 }
             }
-            System.out.println("Generated toggle buttons for " + rewardList.getClass().getSimpleName());
+            System.out.println("Generated toggle buttons for AddRewardDialogController");
 
     }
 }

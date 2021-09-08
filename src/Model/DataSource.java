@@ -2,16 +2,16 @@ package Model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import Controller.Pokemon;
 import Controller.PokemonUpdate;
+import util.SQLiteQueries;
 
 import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+// Our singleton class for grabbing data from our SQLite db
 public class DataSource {
 
     // The Pokemon currently in the stack are loaded from the database at startup and added to this list.
@@ -27,46 +27,6 @@ public class DataSource {
     // this is only used to pull the Pokemon from thesilphroad.com, which already accounts for that and only uses
     // pokedex numbers for Pokemon that do not share their pokedex numbers.
     private final Map<Integer, Pokemon> researchRewardsPokedexValue = new TreeMap<>();
-
-    // == SQLite constants ==
-    private static final String DB_NAME = "Pokemon.db";
-    private static final String CONNECTION_STRING = "jdbc:sqlite:C:/Users/festi/IdeaProjects/Stacker JavaFX2/src/" + DB_NAME;
-
-    private static final String TABLE_POKEMON = "pokemon";
-    private static final String TABLE_RESEARCH_REWARDS = "rewards";
-    private static final String TABLE_LEGACY_REWARDS = "legacy_rewards";
-
-    private static final String COLUMN_POKEMON_NAME = "pokemon_name";
-    private static final String COLUMN_POKEDEX_NUMBER = "pokedex_number";
-    private static final String COLUMN_BASE_ATTACK = "attack";
-    private static final String COLUMN_BASE_DEFENSE = "defense";
-    private static final String COLUMN_BASE_STAMINA = "stamina";
-    private static final int INDEX_POKEMON_NAME = 1;
-    private static final int INDEX_POKEDEX_NUMBER = 2;
-    private static final int INDEX_BASE_ATTACK = 3;
-    private static final int INDEX_BASE_DEFENSE = 4;
-    private static final int INDEX_BASE_STAMINA = 5;
-    private static final String COLUMN_CP = "CP";
-    private static final String TABLE_STACK = "stack";
-    private static final String CREATE_STACK_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STACK + " (\n" +
-            COLUMN_POKEMON_NAME + " text NOT NULL, \n" +
-            COLUMN_CP + " integer NOT NULL)\n";
-
-    private static final String INSERT_POKEMON = "INSERT INTO " + TABLE_POKEMON + " (" + COLUMN_POKEMON_NAME + ", " +
-            COLUMN_POKEDEX_NUMBER + ", " + COLUMN_BASE_ATTACK + ", " +
-            COLUMN_BASE_DEFENSE + ", " + COLUMN_BASE_STAMINA + ") VALUES(?, ?, ?, ?, ?)";
-
-    private static final String INSERT_STACK = "INSERT INTO " + TABLE_STACK + " (" + COLUMN_POKEMON_NAME + ", " +
-            COLUMN_CP + ") VALUES(?, ?)";
-    private static final String QUERY_FOR_FILLING_REWARDS = "SELECT * FROM " + TABLE_POKEMON + " WHERE " +
-            COLUMN_POKEMON_NAME + " = ?";
-    private static final String QUERY_RESEARCH_POKEMON = "SELECT * FROM " + TABLE_RESEARCH_REWARDS + " ORDER BY " + COLUMN_POKEDEX_NUMBER;
-    private static final String QUERY_LEGACY_POKEMON = "SELECT * FROM " + TABLE_LEGACY_REWARDS;
-    private static final String QUERY_STACK = "SELECT * FROM " + TABLE_STACK;
-    private static final String REMOVE_TOP_STACK = "DELETE FROM " + TABLE_STACK + " WHERE ROWID in (SELECT ROWID FROM " + TABLE_STACK + " LIMIT 1)";
-    private static final String REMOVE_ALL_STACK = "DELETE FROM " + TABLE_STACK;
-
-    private static final int INDEX_CP = 2;
 
     private static DataSource instance = new DataSource();
 
@@ -108,7 +68,7 @@ public class DataSource {
 
     public boolean reopen() {
         try {
-            conn = DriverManager.getConnection(CONNECTION_STRING);
+            conn = DriverManager.getConnection(SQLiteQueries.CONNECTION_STRING);
             loadResearchRewardsFromSql();
             return true;
         } catch(SQLException e) {
@@ -127,14 +87,14 @@ public class DataSource {
 
     // Load Pokemon stack from SQLite database.
     private void loadStack() {
-        try (PreparedStatement statement = conn.prepareStatement(CREATE_STACK_TABLE)) {
+        try (PreparedStatement statement = conn.prepareStatement(SQLiteQueries.CREATE_STACK_TABLE)) {
             statement.execute();
         } catch(SQLException e) {
             System.out.println("Error creating stack table: " + e.getMessage());
             e.printStackTrace();
         }
         stack.clear();
-        try(PreparedStatement statement = conn.prepareStatement(QUERY_STACK);
+        try(PreparedStatement statement = conn.prepareStatement(SQLiteQueries.QUERY_STACK);
             ResultSet results = statement.executeQuery()) {
 
             while(results.next()) {
@@ -145,13 +105,13 @@ public class DataSource {
                 if(pokemon == null) {
                     pokemon = legacyResearchRewards.get(pokemonName);
                     if(pokemon == null) {
-                        try (PreparedStatement queryPokemonTableForRewards = conn.prepareStatement(QUERY_FOR_FILLING_REWARDS)) {
-                            queryPokemonTableForRewards.setString(INDEX_POKEMON_NAME, pokemonName);
+                        try (PreparedStatement queryPokemonTableForRewards = conn.prepareStatement(SQLiteQueries.QUERY_FOR_FILLING_REWARDS)) {
+                            queryPokemonTableForRewards.setString(SQLiteQueries.INDEX_POKEMON_NAME, pokemonName);
                             try (ResultSet newResults = queryPokemonTableForRewards.executeQuery()) {
-                                int pokedexNumber = newResults.getInt(COLUMN_POKEDEX_NUMBER);
-                                int baseAttack = newResults.getInt(COLUMN_BASE_ATTACK);
-                                int baseDefense = newResults.getInt(COLUMN_BASE_DEFENSE);
-                                int baseStamina = newResults.getInt(COLUMN_BASE_STAMINA);
+                                int pokedexNumber = newResults.getInt(SQLiteQueries.COLUMN_POKEDEX_NUMBER);
+                                int baseAttack = newResults.getInt(SQLiteQueries.COLUMN_BASE_ATTACK);
+                                int baseDefense = newResults.getInt(SQLiteQueries.COLUMN_BASE_DEFENSE);
+                                int baseStamina = newResults.getInt(SQLiteQueries.COLUMN_BASE_STAMINA);
                                 pokemon = new Pokemon(pokedexNumber, pokemonName, baseAttack, baseDefense, baseStamina);
                             } catch (SQLException f) {
                                 System.out.println("Error finding " + pokemonName + ": " + f.getMessage());
@@ -177,8 +137,8 @@ public class DataSource {
     // Writes research table from the full list using the list of current rewards.
     // For now, it pulls from hardcoded lists but ideally this will be in a SQL table in the future.
     public void loadResearchRewardsFromSql() {
-        loadRewardsUsingQuery(QUERY_RESEARCH_POKEMON, false);
-        loadRewardsUsingQuery(QUERY_LEGACY_POKEMON, true);
+        loadRewardsUsingQuery(SQLiteQueries.QUERY_RESEARCH_POKEMON, false);
+        loadRewardsUsingQuery(SQLiteQueries.QUERY_LEGACY_POKEMON, true);
 
     }
 
@@ -188,10 +148,11 @@ public class DataSource {
 
             int count = 0;
             while(results.next() && count < 60) {
-                String pokemonName = results.getString(INDEX_POKEMON_NAME);
-                int pokedexNum = results.getInt(INDEX_POKEDEX_NUMBER);
+                String pokemonName = results.getString(SQLiteQueries.INDEX_POKEMON_NAME);
+                int pokedexNum = results.getInt(SQLiteQueries.INDEX_POKEDEX_NUMBER);
                 Pokemon newPokemon = new Pokemon(pokedexNum, pokemonName,
-                        results.getInt(INDEX_BASE_ATTACK), results.getInt(INDEX_BASE_DEFENSE), results.getInt(INDEX_BASE_STAMINA));
+                        results.getInt(SQLiteQueries.INDEX_BASE_ATTACK), results.getInt(SQLiteQueries.INDEX_BASE_DEFENSE),
+                        results.getInt(SQLiteQueries.INDEX_BASE_STAMINA));
                 if(!isLegacy) {
                     researchRewards.put(pokemonName, newPokemon);
                     researchRewardsPokedexValue.put(pokedexNum, newPokemon);
@@ -213,7 +174,7 @@ public class DataSource {
         try (Statement statement = conn.createStatement()) {
             try(ResultSet results = statement.executeQuery(QUERY_RESEARCH)) {
                 while(results.next()) {
-                    String pokemonName = results.getString(INDEX_POKEMON_NAME);
+                    String pokemonName = results.getString(SQLiteQueries.INDEX_POKEMON_NAME);
                     spriteList.add(pokemonName);
                 }
             }
@@ -226,9 +187,9 @@ public class DataSource {
 
 
     private void writeToStack(Pokemon pokemon) {
-        try (PreparedStatement insertIntoStack = conn.prepareStatement(INSERT_STACK)) {
-            insertIntoStack.setString(INDEX_POKEMON_NAME, pokemon.getName());
-            insertIntoStack.setInt(INDEX_CP, pokemon.getCP());
+        try (PreparedStatement insertIntoStack = conn.prepareStatement(SQLiteQueries.INSERT_STACK)) {
+            insertIntoStack.setString(SQLiteQueries.INDEX_POKEMON_NAME, pokemon.getName());
+            insertIntoStack.setInt(SQLiteQueries.INDEX_CP, pokemon.getCP());
             insertIntoStack.execute();
             conn.commit();
         } catch(SQLException e) {
@@ -248,13 +209,13 @@ public class DataSource {
         int pokemonStardust = stack.get(0).getStardustValue();
         stack.remove(0);
         setStackStardustValue(stardustValue - pokemonStardust);
-        removeFromStack(REMOVE_TOP_STACK);
+        removeFromStack(SQLiteQueries.REMOVE_TOP_STACK);
     }
 
     public void catchAll() {
         stack.clear();
         setStackStardustValue(0);
-        removeFromStack(REMOVE_ALL_STACK);
+        removeFromStack(SQLiteQueries.REMOVE_ALL_STACK);
     }
 
     public final Map<String, Pokemon> getResearchRewards() {
