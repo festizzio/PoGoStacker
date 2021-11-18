@@ -138,7 +138,6 @@ public class DataSource {
     public void loadResearchRewardsFromSql() {
         loadRewardsUsingQuery(SQLiteQueries.QUERY_RESEARCH_POKEMON, false);
         loadRewardsUsingQuery(SQLiteQueries.QUERY_LEGACY_POKEMON, true);
-
     }
 
     private void loadRewardsUsingQuery(String QUERY_RESEARCH, boolean isLegacy) {
