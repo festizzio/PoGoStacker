@@ -59,6 +59,7 @@ public class Pokemon {
         spriteFileName = name.toLowerCase() + ".png";
     }
 
+
     // Does this make sense here? Feel like it would fit better in DataSource.
     // IV floor for research tasks is 10/10/10, and these values don't change between Pokemon.
     // No reason to call it every time you instantiate a new Pokemon object.
@@ -181,5 +182,9 @@ public class Pokemon {
 
     public String getIvValuesPerCp() {
         return this.ivValuesPerCp.get();
+    }
+
+    public void setName(String name) {
+        this.name.set(name);
     }
 }
