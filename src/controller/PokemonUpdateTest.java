@@ -1,6 +1,6 @@
 package controller;
 
-import model.DataSource;
+import dao.DataSource;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

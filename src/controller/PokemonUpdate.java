@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.List;
 
-import model.DataSource;
+import dao.DataSource;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;

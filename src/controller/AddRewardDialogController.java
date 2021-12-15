@@ -1,6 +1,6 @@
 package controller;
 
-import model.DataSource;
+import dao.DataSource;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

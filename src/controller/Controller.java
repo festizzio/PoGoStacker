@@ -1,6 +1,6 @@
 package controller;
 
-import model.DataSource;
+import dao.DataSource;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;

@@ -1,4 +1,4 @@
-package model;
+package dao;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
