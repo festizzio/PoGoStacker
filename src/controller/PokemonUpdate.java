@@ -318,18 +318,28 @@ public class PokemonUpdate {
         }
     }
 
+    // For different variations on the same Pokemon, TSR does not use numbers, "618.png". Instead,
+    // they use the name of the Pokemon followed by the region. "vulpix-alola.png."
+    // This method converts them to match the format of the sprites.
     public PokemonName convertName (String pokemonFromSilphRoad) {
         String pokemonSqlDbName;
         String basePokemonName;
         String spriteName;
         String pokemonNameModifier;
         String basePokemonName2;
+
+        // TSR uses file names such as "vulpix-alola.png," so we need to
+        // swap alola and vulpix, remove the dash, and add 'n' to alola for the sprite name.
+        // Same for the database name except the first letter must be capitalized in the db.
+
         if(pokemonFromSilphRoad.matches(".*[Aa]lola.*")) {
             basePokemonName = pokemonFromSilphRoad.replaceAll("[Aa]lola", "");
             spriteName = pokemonFromSilphRoad + "n";
             pokemonNameModifier = pokemonFromSilphRoad.replaceAll(basePokemonName, "");
             basePokemonName2 = basePokemonName.replaceAll("\\W+", "");
             pokemonSqlDbName = pokemonNameModifier + "n " + basePokemonName2;
+
+            // Same as Alola but with Galaria instead, e.g. "meowth-galaria.png"
         } else if(pokemonFromSilphRoad.matches(".*[Gg]alaria.*")) {
             basePokemonName = pokemonFromSilphRoad.replaceAll("[Gg]alaria", "");
             spriteName = pokemonFromSilphRoad + "n";
