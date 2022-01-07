@@ -112,7 +112,7 @@ public class ConvertDbLowercase {
                                 int baseAttack = newResults.getInt(SQLiteQueries.COLUMN_BASE_ATTACK);
                                 int baseDefense = newResults.getInt(SQLiteQueries.COLUMN_BASE_DEFENSE);
                                 int baseStamina = newResults.getInt(SQLiteQueries.COLUMN_BASE_STAMINA);
-                                pokemon = new Pokemon(pokedexNumber, pokemonName, baseAttack, baseDefense, baseStamina);
+                                pokemon = new Pokemon(pokedexNumber, pokemonName, baseAttack, baseDefense, baseStamina, CP);
                             } catch (SQLException f) {
                                 System.out.println("Error finding " + pokemonName + ": " + f.getMessage());
                             }
@@ -120,7 +120,6 @@ public class ConvertDbLowercase {
                     }
                 }
                 if(pokemon != null) {
-                    pokemon.setCP(CP);
                     stack.add(pokemon);
                     stardustValue += pokemon.getStardustValue();
                 } else {
@@ -151,7 +150,7 @@ public class ConvertDbLowercase {
                 int pokedexNum = results.getInt(SQLiteQueries.INDEX_POKEDEX_NUMBER);
                 Pokemon newPokemon = new Pokemon(pokedexNum, pokemonName,
                         results.getInt(SQLiteQueries.INDEX_BASE_ATTACK), results.getInt(SQLiteQueries.INDEX_BASE_DEFENSE),
-                        results.getInt(SQLiteQueries.INDEX_BASE_STAMINA));
+                        results.getInt(SQLiteQueries.INDEX_BASE_STAMINA), 0);
                 if(!isLegacy) {
                     researchRewards.put(pokemonName, newPokemon);
                     researchRewardsPokedexValue.put(pokedexNum, newPokemon);
@@ -276,7 +275,7 @@ public class ConvertDbLowercase {
                         attack = resultSet.getInt(SQLiteQueries.COLUMN_BASE_ATTACK),
                         defense = resultSet.getInt(SQLiteQueries.COLUMN_BASE_DEFENSE),
                         stamina = resultSet.getInt(SQLiteQueries.COLUMN_BASE_STAMINA);
-                Pokemon newPokemon = new Pokemon(pokedex, name, attack, defense, stamina);
+                Pokemon newPokemon = new Pokemon(pokedex, name, attack, defense, stamina, 0);
                 allPokemon.add(newPokemon);
                 newPokemon.setName(lowercase);
                 allLowercasePokemon.add(newPokemon);

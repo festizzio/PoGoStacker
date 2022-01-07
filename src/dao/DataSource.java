@@ -100,9 +100,9 @@ public class DataSource {
                 String pokemonName = results.getString(1);
                 int CP = results.getInt(2);
 
-                Pokemon pokemon = researchRewards.get(pokemonName);
+                Pokemon pokemon = new Pokemon(researchRewards.get(pokemonName), CP);
                 if(pokemon == null) {
-                    pokemon = legacyResearchRewards.get(pokemonName);
+                    pokemon = new Pokemon(legacyResearchRewards.get(pokemonName), CP);
                     if(pokemon == null) {
                         try (PreparedStatement queryPokemonTableForRewards = conn.prepareStatement(SQLiteQueries.QUERY_FOR_FILLING_REWARDS)) {
                             queryPokemonTableForRewards.setString(SQLiteQueries.INDEX_POKEMON_NAME, pokemonName);
@@ -111,7 +111,7 @@ public class DataSource {
                                 int baseAttack = newResults.getInt(SQLiteQueries.COLUMN_BASE_ATTACK);
                                 int baseDefense = newResults.getInt(SQLiteQueries.COLUMN_BASE_DEFENSE);
                                 int baseStamina = newResults.getInt(SQLiteQueries.COLUMN_BASE_STAMINA);
-                                pokemon = new Pokemon(pokedexNumber, pokemonName, baseAttack, baseDefense, baseStamina);
+                                pokemon = new Pokemon(pokedexNumber, pokemonName, baseAttack, baseDefense, baseStamina, CP);
                             } catch (SQLException f) {
                                 System.out.println("Error finding " + pokemonName + ": " + f.getMessage());
                             }
@@ -119,7 +119,6 @@ public class DataSource {
                     }
                 }
                 if(pokemon != null) {
-                    pokemon.setCP(CP);
                     stack.add(pokemon);
                     stardustValue += pokemon.getStardustValue();
                 } else {
@@ -150,7 +149,7 @@ public class DataSource {
                 int pokedexNum = results.getInt(SQLiteQueries.INDEX_POKEDEX_NUMBER);
                 Pokemon newPokemon = new Pokemon(pokedexNum, pokemonName,
                         results.getInt(SQLiteQueries.INDEX_BASE_ATTACK), results.getInt(SQLiteQueries.INDEX_BASE_DEFENSE),
-                        results.getInt(SQLiteQueries.INDEX_BASE_STAMINA));
+                        results.getInt(SQLiteQueries.INDEX_BASE_STAMINA), 0);
                 if(!isLegacy) {
                     researchRewards.put(pokemonName, newPokemon);
                     researchRewardsPokedexValue.put(pokedexNum, newPokemon);

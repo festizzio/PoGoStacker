@@ -13,7 +13,7 @@ public class Pokemon {
     private final int baseStamina;
     private final int pokedexNumber;
     private String name;
-    private int CP;
+    private final int CP;
     private String ivValuesPerCp;
     private final List<Integer> possibleCPValues;
     private final int minCP;
@@ -25,7 +25,13 @@ public class Pokemon {
     // Deprecate soon, currently the file names in the sprites folder are all lowercase, but in the database, the first letter is capitalized.
     private String spriteFileName;
 
-    public Pokemon(int pokedexNumber, String name, int baseAttack, int baseDefense, int baseStamina) {
+    public Pokemon(Pokemon pokemon, int CP) {
+        this(pokemon.getPokedexNumber(), pokemon.getName(), pokemon.getBaseAttack(),
+                pokemon.getBaseDefense(), pokemon.getBaseStamina(), CP);
+
+    }
+
+    public Pokemon(int pokedexNumber, String name, int baseAttack, int baseDefense, int baseStamina, int CP) {
 
         this.pokedexNumber = pokedexNumber;
         this.name = name;
@@ -52,6 +58,14 @@ public class Pokemon {
         }
 
         spriteFileName = name.toLowerCase() + ".png";
+
+        if(CP > 0) {
+            this.CP = CP;
+        } else {
+            this.CP = calculateCP(15, 15, 15);
+        }
+
+        calculateIvPercentagePerCP();
     }
 
     // IV floor for research tasks is 10/10/10, and these values don't change between Pokemon.
@@ -131,11 +145,6 @@ public class Pokemon {
             this.ivValuesPerCp = sb.toString();
             return true;
         }
-    }
-
-    public boolean setCP(int CP) {
-        this.CP = CP;
-        return calculateIvPercentagePerCP();
     }
 
     public int getCP() {
