@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane fx:id="mainBorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="Controller.Controller">
+            fx:controller="controller.Controller">
     <top>
         <MenuBar>
             <Menu text="File">

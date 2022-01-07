@@ -37,6 +37,7 @@ public final class SQLiteQueries {
     public static final String QUERY_RESEARCH_POKEMON = "SELECT * FROM " + TABLE_RESEARCH_REWARDS + " ORDER BY " + COLUMN_POKEDEX_NUMBER;
     public static final String QUERY_LEGACY_POKEMON = "SELECT * FROM " + TABLE_LEGACY_REWARDS;
     public static final String QUERY_STACK = "SELECT * FROM " + TABLE_STACK;
+    public static final String QUERY_ALL = "SELECT * FROM " + TABLE_POKEMON;
     public static final String REMOVE_TOP_STACK = "DELETE FROM " + TABLE_STACK + " WHERE ROWID in (SELECT ROWID FROM " + TABLE_STACK + " LIMIT 1)";
     public static final String REMOVE_ALL_STACK = "DELETE FROM " + TABLE_STACK;
 

@@ -1,4 +1,4 @@
-package Controller;
+package model;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -7,18 +7,14 @@ import java.util.*;
 
 public class Pokemon {
 
+    // == field variables ==
     private final int baseAttack;
     private final int baseDefense;
     private final int baseStamina;
     private final int pokedexNumber;
-
-    // == ObservableValue declarations for JavaFX ==
-    private final SimpleStringProperty name;
-
-    // CP stands for Combat Power, an arbitrary calculation by Niantic to gauge the
-    // overall ability of the Pokemon in battle.
-    private final SimpleIntegerProperty CP;
-    private final SimpleStringProperty ivValuesPerCp;
+    private String name;
+    private int CP;
+    private String ivValuesPerCp;
     private final List<Integer> possibleCPValues;
     private final int minCP;
     private final int maxCP;
@@ -26,14 +22,13 @@ public class Pokemon {
     private final Map<Integer, List<IvValues>> mapOfIvValues;
     private static final List<IvValues> ivList = calculateListOfIVs();
 
+    // Deprecate soon, currently the file names in the sprites folder are all lowercase, but in the database, the first letter is capitalized.
     private String spriteFileName;
 
     public Pokemon(int pokedexNumber, String name, int baseAttack, int baseDefense, int baseStamina) {
 
-        this.CP = new SimpleIntegerProperty();
-        this.ivValuesPerCp = new SimpleStringProperty();
         this.pokedexNumber = pokedexNumber;
-        this.name = new SimpleStringProperty(name);
+        this.name = name;
         this.baseAttack = baseAttack;
         this.baseDefense = baseDefense;
         this.baseStamina = baseStamina;
@@ -52,16 +47,15 @@ public class Pokemon {
             stardustValue = 500;
         } else if(stage1EvoName.contains(name)) {
             stardustValue = 300;
-        } else{
+        } else {
             stardustValue = 100;
         }
 
         spriteFileName = name.toLowerCase() + ".png";
     }
 
-    // Does this make sense here? Feel like it would fit better in DataSource.
     // IV floor for research tasks is 10/10/10, and these values don't change between Pokemon.
-    // No reason to call it every time you instantiate a new Pokemon object.
+    // No reason to call it every time you instantiate a new Pokemon object hence it being static.
     private static List<IvValues> calculateListOfIVs() {
         List<IvValues> ivValues = new ArrayList<>();
         for(int attackIV = 10; attackIV <= 15; attackIV++) {
@@ -74,6 +68,7 @@ public class Pokemon {
         return ivValues;
     }
 
+    // Calculate the list of possible CP values for this Pokemon based on level 15 with any of the IV values given.
     private void calculatePossibleCPValues() {
         int CP;
         List<IvValues> listOfIvValues;
@@ -97,7 +92,9 @@ public class Pokemon {
     }
 
     private int calculateCP(int attackIV, int defenseIV, int staminaIV) {
-        // Based on information found on gamepress.gg
+        // Formula to calculate the CP of a Pokemon based on its known IVs and level per gamepress.gg.
+        // The arbitrary CP multiplier for level 15 (the level of all research rewards) is 0.51739395.
+        // https://gamepress.gg/pokemongo/cp-multiplier
         return (int) ((baseAttack + attackIV) * Math.pow((baseDefense + defenseIV), 0.5) *
                 Math.pow((baseStamina + staminaIV), 0.5) * Math.pow(0.51739395, 2)) / 10;
     }
@@ -108,38 +105,41 @@ public class Pokemon {
     }
 
     public String getName() {
-        return this.name.get();
+        return this.name;
     }
 
     public int getStardustValue() {
         return stardustValue;
     }
 
+    // For each CP, there are several different possibilities for IV percentages. This sets the range.
     private boolean calculateIvPercentagePerCP() {
         StringBuilder sb = new StringBuilder();
         List<IvValues> valuesPerCp;
 
-        if(!mapOfIvValues.containsKey(this.CP.get())){
+        if(!mapOfIvValues.containsKey(CP)){
             System.out.println("Invalid CP value for this Pokemon");
             return false;
         } else {
-            valuesPerCp = mapOfIvValues.get(this.CP.get());
+            valuesPerCp = mapOfIvValues.get(CP);
             sb.append(valuesPerCp.get(0).getIvPercentage());
-            sb.append("% - ");
-            sb.append(valuesPerCp.get(valuesPerCp.size() - 1).getIvPercentage());
+            if(!(valuesPerCp.get(0).getIvPercentage() == valuesPerCp.get(valuesPerCp.size() - 1).getIvPercentage())) {
+                sb.append("% - ");
+                sb.append(valuesPerCp.get(valuesPerCp.size() - 1).getIvPercentage());
+            }
             sb.append("%");
-            this.ivValuesPerCp.set(sb.toString());
+            this.ivValuesPerCp = sb.toString();
             return true;
         }
     }
 
     public boolean setCP(int CP) {
-        this.CP.set(CP);
+        this.CP = CP;
         return calculateIvPercentagePerCP();
     }
 
     public int getCP() {
-        return CP.get();
+        return CP;
     }
 
     public List<Integer> getPossibleCPValues() {
@@ -148,11 +148,6 @@ public class Pokemon {
 
     public String getSpriteFileName() {
         return spriteFileName;
-    }
-
-    @Override
-    public String toString() {
-        return getName() + ": CP " + getCP();
     }
 
     public int getPokedexNumber() {
@@ -180,6 +175,15 @@ public class Pokemon {
     }
 
     public String getIvValuesPerCp() {
-        return this.ivValuesPerCp.get();
+        return this.ivValuesPerCp;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return getName() + ": CP " + getCP();
     }
 }

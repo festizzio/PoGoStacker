@@ -1,20 +1,20 @@
-package Model;
+package dao;
 
+import model.Pokemon;
+import controller.PokemonUpdate;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.*;
-import Controller.Pokemon;
-import Controller.PokemonUpdate;
+import javafx.scene.control.Alert;
 import util.SQLiteQueries;
 
-import java.io.*;
 import java.sql.*;
 import java.util.*;
 
-// Our singleton class for grabbing data from our SQLite db
-public class DataSource {
+// Single-time use class to load all of the Pokemon from the database and convert to lowercase.
+// Going to create a test class as well to compare the list we loaded from the database to
+// the updated list with the all-lowercase names and make sure they are converted properly.
+public class ConvertDbLowercase {
 
-    // The Pokemon currently in the stack are loaded from the database at startup and added to this list.
     private final LinkedList<Pokemon> stack = new LinkedList<>();
 
     // Current rewards and legacy rewards are separated so we can create multiple dialogs later.
@@ -28,7 +28,7 @@ public class DataSource {
     // pokedex numbers for Pokemon that do not share their pokedex numbers.
     private final Map<Integer, Pokemon> researchRewardsPokedexValue = new TreeMap<>();
 
-    private static DataSource instance = new DataSource();
+    private static ConvertDbLowercase instance = new ConvertDbLowercase();
 
     private Connection conn;
 
@@ -36,7 +36,7 @@ public class DataSource {
     private final SimpleStringProperty stackStardustValue = new SimpleStringProperty();
     private final SimpleStringProperty stackNumPokemon = new SimpleStringProperty();
 
-    private DataSource() {
+    private ConvertDbLowercase() {
 
     }
 
@@ -78,9 +78,9 @@ public class DataSource {
         }
     }
 
-    public static DataSource getInstance() {
+    public static ConvertDbLowercase getInstance() {
         if(instance == null) {
-            instance = new DataSource();
+            instance = new ConvertDbLowercase();
         }
         return instance;
     }
@@ -139,7 +139,6 @@ public class DataSource {
     public void loadResearchRewardsFromSql() {
         loadRewardsUsingQuery(SQLiteQueries.QUERY_RESEARCH_POKEMON, false);
         loadRewardsUsingQuery(SQLiteQueries.QUERY_LEGACY_POKEMON, true);
-
     }
 
     private void loadRewardsUsingQuery(String QUERY_RESEARCH, boolean isLegacy) {
@@ -259,5 +258,44 @@ public class DataSource {
 
     public Pokemon getPokemon(String pokemonName) {
         return researchRewards.get(pokemonName);
+    }
+
+
+    // Object to hold the Pokemon we want to convert.
+    private final List<Pokemon> allPokemon = new LinkedList<>();
+    private final List<Pokemon> allLowercasePokemon = new LinkedList<>();
+
+    // We need a method to load the list of all Pokemon
+    public void loadAllPokemon() {
+        try(PreparedStatement statement = conn.prepareStatement(SQLiteQueries.QUERY_ALL);
+            ResultSet resultSet = statement.executeQuery()) {
+            while(resultSet.next()) {
+                String name = resultSet.getString(SQLiteQueries.COLUMN_POKEMON_NAME);
+                String lowercase = name.toLowerCase();
+                int pokedex = resultSet.getInt(SQLiteQueries.COLUMN_POKEDEX_NUMBER),
+                        attack = resultSet.getInt(SQLiteQueries.COLUMN_BASE_ATTACK),
+                        defense = resultSet.getInt(SQLiteQueries.COLUMN_BASE_DEFENSE),
+                        stamina = resultSet.getInt(SQLiteQueries.COLUMN_BASE_STAMINA);
+                Pokemon newPokemon = new Pokemon(pokedex, name, attack, defense, stamina);
+                allPokemon.add(newPokemon);
+                newPokemon.setName(lowercase);
+                allLowercasePokemon.add(newPokemon);
+            }
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public List<Pokemon> getAllPokemon() {
+        return allPokemon;
+    }
+
+    public List<Pokemon> getAllLowercasePokemon() {
+        return allLowercasePokemon;
+    }
+
+    // We need a method to write the new list of lowercase Pokemon names
+    public void saveLowercasePokemon() {
+
     }
 }

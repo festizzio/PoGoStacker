@@ -1,6 +1,6 @@
-package Model;
+package model;
 
-import Controller.Pokemon;
+import dao.DataSource;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;

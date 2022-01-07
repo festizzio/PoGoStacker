@@ -1,7 +1,6 @@
-package Controller;
+package controller;
 
-import Model.DataSource;
-import Model.PokemonGridPane;
+import dao.DataSource;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -9,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import model.Pokemon;
 
 
 import java.io.IOException;
