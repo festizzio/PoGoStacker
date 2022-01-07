@@ -7,17 +7,19 @@ public class IvValues {
     private final int defenseIV;
     private final int staminaIV;
     private static final DecimalFormat df2 = new DecimalFormat("##.##");
-    private final double IvPercentage;
+    private final int IvPercentage;
 
     public IvValues(int attackIV, int defenseIV, int staminaIV) {
         this.attackIV = attackIV;
         this.defenseIV = defenseIV;
         this.staminaIV = staminaIV;
-        IvPercentage = Double.parseDouble(df2.format(((((double) attackIV + (double) defenseIV +
-                (double) staminaIV) / 45) * 100)));
+
+        // Round the result to the nearest whole value and store as int. We don't talk about IV percentages as
+        // 88.89 or 93.33, we say 89 or 93.
+        IvPercentage = (int) Math.round((((double) (attackIV + defenseIV + staminaIV)) / 45) * 100);
     }
 
-    public double getIvPercentage() {
+    public int getIvPercentage() {
         return IvPercentage;
     }
 
