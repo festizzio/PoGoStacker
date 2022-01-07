@@ -123,8 +123,10 @@ public class Pokemon {
         } else {
             valuesPerCp = mapOfIvValues.get(CP);
             sb.append(valuesPerCp.get(0).getIvPercentage());
-            sb.append("% - ");
-            sb.append(valuesPerCp.get(valuesPerCp.size() - 1).getIvPercentage());
+            if(!(valuesPerCp.get(0).getIvPercentage() == valuesPerCp.get(valuesPerCp.size() - 1).getIvPercentage())) {
+                sb.append("% - ");
+                sb.append(valuesPerCp.get(valuesPerCp.size() - 1).getIvPercentage());
+            }
             sb.append("%");
             this.ivValuesPerCp = sb.toString();
             return true;
