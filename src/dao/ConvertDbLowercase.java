@@ -1,6 +1,6 @@
 package dao;
 
-import controller.Pokemon;
+import model.Pokemon;
 import controller.PokemonUpdate;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;

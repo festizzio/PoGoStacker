@@ -3,7 +3,7 @@ package dao;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
-import controller.Pokemon;
+import model.Pokemon;
 import controller.PokemonUpdate;
 import util.SQLiteQueries;
 
