@@ -11,14 +11,12 @@ public class Pokemon {
     private final int baseDefense;
     private final int baseStamina;
     private final int pokedexNumber;
-
-    // == ObservableValue declarations for JavaFX ==
-    private final SimpleStringProperty name;
+    private String name;
 
     // CP stands for Combat Power, an arbitrary calculation by Niantic to gauge the
     // overall ability of the Pokemon in battle.
-    private final SimpleIntegerProperty CP;
-    private final SimpleStringProperty ivValuesPerCp;
+    private int CP;
+    private String ivValuesPerCp;
     private final List<Integer> possibleCPValues;
     private final int minCP;
     private final int maxCP;
@@ -30,10 +28,8 @@ public class Pokemon {
 
     public Pokemon(int pokedexNumber, String name, int baseAttack, int baseDefense, int baseStamina) {
 
-        this.CP = new SimpleIntegerProperty();
-        this.ivValuesPerCp = new SimpleStringProperty();
         this.pokedexNumber = pokedexNumber;
-        this.name = new SimpleStringProperty(name);
+        this.name = name;
         this.baseAttack = baseAttack;
         this.baseDefense = baseDefense;
         this.baseStamina = baseStamina;
@@ -109,7 +105,7 @@ public class Pokemon {
     }
 
     public String getName() {
-        return this.name.get();
+        return this.name;
     }
 
     public int getStardustValue() {
@@ -120,27 +116,27 @@ public class Pokemon {
         StringBuilder sb = new StringBuilder();
         List<IvValues> valuesPerCp;
 
-        if(!mapOfIvValues.containsKey(this.CP.get())){
+        if(!mapOfIvValues.containsKey(CP)){
             System.out.println("Invalid CP value for this Pokemon");
             return false;
         } else {
-            valuesPerCp = mapOfIvValues.get(this.CP.get());
+            valuesPerCp = mapOfIvValues.get(CP);
             sb.append(valuesPerCp.get(0).getIvPercentage());
             sb.append("% - ");
             sb.append(valuesPerCp.get(valuesPerCp.size() - 1).getIvPercentage());
             sb.append("%");
-            this.ivValuesPerCp.set(sb.toString());
+            this.ivValuesPerCp = sb.toString();
             return true;
         }
     }
 
     public boolean setCP(int CP) {
-        this.CP.set(CP);
+        this.CP = CP;
         return calculateIvPercentagePerCP();
     }
 
     public int getCP() {
-        return CP.get();
+        return CP;
     }
 
     public List<Integer> getPossibleCPValues() {
@@ -181,10 +177,10 @@ public class Pokemon {
     }
 
     public String getIvValuesPerCp() {
-        return this.ivValuesPerCp.get();
+        return this.ivValuesPerCp;
     }
 
     public void setName(String name) {
-        this.name.set(name);
+        this.name = name;
     }
 }
