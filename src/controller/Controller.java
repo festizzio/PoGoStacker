@@ -170,7 +170,7 @@ public class Controller {
             updateController.updateRewardsTable();
             updateDialog.showAndWait();
             if(DataSource.getInstance().reopen()) {
-                DataSource.getInstance().loadResearchRewardsFromSql();
+                DataSource.getInstance().loadRewardsFromDb();
             } else {
                 System.out.println("Error re-opening and loading research rewards");
             }

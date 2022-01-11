@@ -68,7 +68,7 @@ public class DataSource {
     public boolean reopen() {
         try {
             conn = DriverManager.getConnection(SQLiteQueries.CONNECTION_STRING);
-            loadResearchRewardsFromSql();
+            loadRewardsFromDb();
             return true;
         } catch(SQLException e) {
             System.out.println("Error opening database: " + e.getMessage());
@@ -134,7 +134,7 @@ public class DataSource {
 
     // Writes research table from the full list using the list of current rewards.
     // For now, it pulls from hardcoded lists but ideally this will be in a SQL table in the future.
-    public void loadResearchRewardsFromSql() {
+    public void loadRewardsFromDb() {
         loadRewardsUsingQuery(SQLiteQueries.QUERY_RESEARCH_POKEMON, false);
         loadRewardsUsingQuery(SQLiteQueries.QUERY_LEGACY_POKEMON, true);
     }
