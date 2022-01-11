@@ -1,8 +1,5 @@
 package model;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 import java.util.*;
 
 public class Pokemon {
@@ -21,9 +18,6 @@ public class Pokemon {
     private final int stardustValue;
     private final Map<Integer, List<IvValues>> mapOfIvValues;
     private static final List<IvValues> ivList = calculateListOfIVs();
-
-    // Deprecate soon, currently the file names in the sprites folder are all lowercase, but in the database, the first letter is capitalized.
-    private String spriteFileName;
 
     public Pokemon(Pokemon pokemon, int CP) {
         this(pokemon.getPokedexNumber(), pokemon.getName(), pokemon.getBaseAttack(),
@@ -56,8 +50,6 @@ public class Pokemon {
         } else {
             stardustValue = 100;
         }
-
-        spriteFileName = name.toLowerCase() + ".png";
 
         if(CP > 0) {
             this.CP = CP;
@@ -127,13 +119,12 @@ public class Pokemon {
     }
 
     // For each CP, there are several different possibilities for IV percentages. This sets the range.
-    private boolean calculateIvPercentagePerCP() {
+    private void calculateIvPercentagePerCP() {
         StringBuilder sb = new StringBuilder();
         List<IvValues> valuesPerCp;
 
         if(!mapOfIvValues.containsKey(CP)){
             System.out.println("Invalid CP value for this Pokemon");
-            return false;
         } else {
             valuesPerCp = mapOfIvValues.get(CP);
             sb.append(valuesPerCp.get(0).getIvPercentage());
@@ -143,7 +134,6 @@ public class Pokemon {
             }
             sb.append("%");
             this.ivValuesPerCp = sb.toString();
-            return true;
         }
     }
 
@@ -155,20 +145,8 @@ public class Pokemon {
         return possibleCPValues;
     }
 
-    public String getSpriteFileName() {
-        return spriteFileName;
-    }
-
     public int getPokedexNumber() {
         return this.pokedexNumber;
-    }
-
-    public int getMinCP() {
-        return minCP;
-    }
-
-    public int getMaxCP() {
-        return maxCP;
     }
 
     public int getBaseAttack() {
@@ -189,6 +167,10 @@ public class Pokemon {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean wasNotFound() {
+        return name == null;
     }
 
     @Override

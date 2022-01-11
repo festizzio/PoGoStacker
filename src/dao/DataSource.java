@@ -101,9 +101,9 @@ public class DataSource {
                 int CP = results.getInt(2);
 
                 Pokemon pokemon = new Pokemon(researchRewards.get(pokemonName), CP);
-                if(pokemon == null) {
+                if(pokemon.wasNotFound()) {
                     pokemon = new Pokemon(legacyResearchRewards.get(pokemonName), CP);
-                    if(pokemon == null) {
+                    if(pokemon.wasNotFound()) {
                         try (PreparedStatement queryPokemonTableForRewards = conn.prepareStatement(SQLiteQueries.QUERY_FOR_FILLING_REWARDS)) {
                             queryPokemonTableForRewards.setString(SQLiteQueries.INDEX_POKEMON_NAME, pokemonName);
                             try (ResultSet newResults = queryPokemonTableForRewards.executeQuery()) {
@@ -118,7 +118,7 @@ public class DataSource {
                         }
                     }
                 }
-                if(pokemon != null) {
+                if(!pokemon.wasNotFound()) {
                     stack.add(pokemon);
                     stardustValue += pokemon.getStardustValue();
                 } else {
