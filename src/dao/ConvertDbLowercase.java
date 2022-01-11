@@ -277,7 +277,7 @@ public class ConvertDbLowercase {
                         stamina = resultSet.getInt(SQLiteQueries.COLUMN_BASE_STAMINA);
                 Pokemon newPokemon = new Pokemon(pokedex, name, attack, defense, stamina, 0);
                 allPokemon.add(newPokemon);
-                newPokemon.setName(lowercase);
+//                newPokemon.setName(lowercase);
                 allLowercasePokemon.add(newPokemon);
             }
         } catch(SQLException e) {

@@ -5,13 +5,18 @@ import java.util.*;
 public class Pokemon {
 
     // == field variables ==
+
+    // == base variables ==
     private final int baseAttack;
     private final int baseDefense;
     private final int baseStamina;
     private final int pokedexNumber;
-    private String name;
+    private final String name;
+
+    // == modifiable values ==
     private final int CP;
     private String ivValuesPerCp;
+
     private final List<Integer> possibleCPValues;
     private final int stardustValue;
     private final Map<Integer, List<IvValues>> mapOfIvValues;
@@ -161,9 +166,9 @@ public class Pokemon {
         return this.ivValuesPerCp;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public boolean wasNotFound() {
         return name == null;
