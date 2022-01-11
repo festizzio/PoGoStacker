@@ -61,20 +61,6 @@ public class Pokemon {
         calculateIvPercentagePerCP();
     }
 
-    // IV floor for research tasks is 10/10/10, and these values don't change between Pokemon.
-    // No reason to call it every time you instantiate a new Pokemon object hence it being static.
-    private static List<IvValues> calculateListOfIVs() {
-        List<IvValues> ivValues = new ArrayList<>();
-        for(int attackIV = 10; attackIV <= 15; attackIV++) {
-            for (int defenseIV = 10; defenseIV <= 15; defenseIV++) {
-                for (int staminaIV = 10; staminaIV <= 15; staminaIV++) {
-                    ivValues.add(new IvValues(attackIV, defenseIV, staminaIV));
-                }
-            }
-        }
-        return ivValues;
-    }
-
     // Calculate the list of possible CP values for this Pokemon based on level 15 with any of the IV values given.
     private void calculatePossibleCPValues() {
         int CP;
@@ -174,8 +160,26 @@ public class Pokemon {
         return name == null;
     }
 
+    // == Overridden methods ==
+
     @Override
     public String toString() {
-        return getName() + ": CP " + getCP();
+        return this.name + ": CP " + this.CP;
+    }
+
+    // == static methods ==
+
+    // IV floor for research tasks is 10/10/10, and these values don't change between Pokemon.
+    // No reason to call it every time you instantiate a new Pokemon object hence it being static.
+    private static List<IvValues> calculateListOfIVs() {
+        List<IvValues> ivValues = new ArrayList<>();
+        for(int attackIV = 10; attackIV <= 15; attackIV++) {
+            for (int defenseIV = 10; defenseIV <= 15; defenseIV++) {
+                for (int staminaIV = 10; staminaIV <= 15; staminaIV++) {
+                    ivValues.add(new IvValues(attackIV, defenseIV, staminaIV));
+                }
+            }
+        }
+        return ivValues;
     }
 }
