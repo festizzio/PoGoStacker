@@ -13,8 +13,6 @@ public class Pokemon {
     private final int CP;
     private String ivValuesPerCp;
     private final List<Integer> possibleCPValues;
-    private final int minCP;
-    private final int maxCP;
     private final int stardustValue;
     private final Map<Integer, List<IvValues>> mapOfIvValues;
     private static final List<IvValues> ivList = calculateListOfIVs();
@@ -36,8 +34,6 @@ public class Pokemon {
         mapOfIvValues = new HashMap<>();
         calculatePossibleCPValues();
         possibleCPValues.sort(Comparator.naturalOrder());
-        this.minCP = possibleCPValues.get(0);
-        this.maxCP = possibleCPValues.get(possibleCPValues.size() - 1);
 
         // == initialize list of evolved Pokemon - these are worth extra stardust ==
         final List<String> stage1EvoName = Arrays.asList("Graveler", "Rhydon", "Poliwhirl", "Monferno",
