@@ -55,7 +55,6 @@ public class DataSource implements PokemonDao {
         return false;
     }
 
-    @Override
     public void close() {
         try {
             if(conn != null) {
