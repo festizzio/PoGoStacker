@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.*;
 
 // Our singleton class for grabbing data from our SQLite db
-public class DataSource {
+public class DataSource implements PokemonDao {
 
     // The Pokemon currently in the stack are loaded from the database at startup and added to this list.
     private final LinkedList<Pokemon> stack = new LinkedList<>();
@@ -55,6 +55,7 @@ public class DataSource {
         return false;
     }
 
+    @Override
     public void close() {
         try {
             if(conn != null) {
@@ -77,7 +78,7 @@ public class DataSource {
         }
     }
 
-    public static DataSource getInstance() {
+    public static PokemonDao getInstance() {
         if(instance == null) {
             instance = new DataSource();
         }
@@ -85,7 +86,7 @@ public class DataSource {
     }
 
     // Load Pokemon stack from SQLite database.
-    private void loadStack() {
+    public void loadStack() {
         try (PreparedStatement statement = conn.prepareStatement(SQLiteQueries.CREATE_STACK_TABLE)) {
             statement.execute();
         } catch(SQLException e) {
