@@ -22,9 +22,18 @@ public class Pokemon {
     private final Map<Integer, List<IvValues>> mapOfIvValues;
     private static final List<IvValues> ivList = calculateListOfIVs();
 
+    // == constructors ==
+
+    public Pokemon(Pokemon pokemon) {
+        this(pokemon.getPokedexNumber(), pokemon.getName(), pokemon.getBaseAttack(), pokemon.getBaseDefense(), pokemon.getBaseStamina());
+    }
+
     public Pokemon(Pokemon pokemon, int CP) {
-        this(pokemon.getPokedexNumber(), pokemon.getName(), pokemon.getBaseAttack(),
-                pokemon.getBaseDefense(), pokemon.getBaseStamina(), CP);
+        this(pokemon.getPokedexNumber(), pokemon.getName(), pokemon.getBaseAttack(), pokemon.getBaseDefense(), pokemon.getBaseStamina(), CP);
+    }
+
+    public Pokemon(int pokedexNumber, String name, int baseAttack, int baseDefense, int baseStamina) {
+        this(pokedexNumber, name, baseAttack, baseDefense, baseStamina, 0);
 
     }
 
@@ -60,6 +69,8 @@ public class Pokemon {
 
         calculateIvPercentagePerCP();
     }
+
+    // == private methods ==
 
     // Calculate the list of possible CP values for this Pokemon based on level 15 with any of the IV values given.
     private void calculatePossibleCPValues() {
@@ -97,14 +108,6 @@ public class Pokemon {
         possibleCPValues.sort(Comparator.naturalOrder());
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public int getStardustValue() {
-        return stardustValue;
-    }
-
     // For each CP, there are several different possibilities for IV percentages. This sets the range.
     private void calculateIvPercentagePerCP() {
         StringBuilder sb = new StringBuilder();
@@ -122,6 +125,16 @@ public class Pokemon {
             sb.append("%");
             this.ivValuesPerCp = sb.toString();
         }
+    }
+
+    // == public methods ==
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getStardustValue() {
+        return stardustValue;
     }
 
     public int getCP() {

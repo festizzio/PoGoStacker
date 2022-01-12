@@ -39,10 +39,11 @@ public class AddRewardDialogController {
         int CP = cpListView.getSelectionModel().getSelectedItem();
         Pokemon newStackPokemon;
         if (getClass().getSimpleName().equals("AddLegacyRewardDialogController")) {
-            newStackPokemon = new Pokemon(DataSource.getInstance().getLegacyResearchRewards().get(pokemonName), CP);
+            newStackPokemon = DataSource.getInstance().getLegacyResearchRewards().get(pokemonName);
         } else {
-            newStackPokemon = new Pokemon(DataSource.getInstance().getResearchRewards().get(pokemonName), CP);
+            newStackPokemon = DataSource.getInstance().getResearchRewards().get(pokemonName);
         }
+        newStackPokemon = new Pokemon(newStackPokemon, CP);
         DataSource.getInstance().addReward(newStackPokemon);
 
         return true;

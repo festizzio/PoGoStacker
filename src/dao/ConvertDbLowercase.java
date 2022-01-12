@@ -130,7 +130,6 @@ public class ConvertDbLowercase {
         } catch(SQLException e) {
             System.out.println("Error loading database from loadStack(): " + e.getMessage());
         }
-        setStackStardustValue(stardustValue);
     }
 
     // Writes research table from the full list using the list of current rewards.
@@ -195,27 +194,6 @@ public class ConvertDbLowercase {
         }
     }
 
-    public void addReward(Pokemon pokemon) {
-        stack.add(pokemon);
-        stardustValue += pokemon.getStardustValue();
-        setStackStardustValue(stardustValue);
-        System.out.println(pokemon.getName() + " : " + pokemon.getStardustValue() + " added to the stack.");
-        writeToStack(pokemon);
-    }
-
-    public void catchReward() {
-        int pokemonStardust = stack.get(0).getStardustValue();
-        stack.remove(0);
-        setStackStardustValue(stardustValue - pokemonStardust);
-        removeFromStack(SQLiteQueries.REMOVE_TOP_STACK);
-    }
-
-    public void catchAll() {
-        stack.clear();
-        setStackStardustValue(0);
-        removeFromStack(SQLiteQueries.REMOVE_ALL_STACK);
-    }
-
     public final Map<String, Pokemon> getResearchRewards() {
         return Collections.unmodifiableMap(researchRewards);
     }
@@ -235,30 +213,6 @@ public class ConvertDbLowercase {
     public List<Pokemon> getStack() {
         return stack;
     }
-
-    public void setStackStardustValue(int stardust) {
-        stardustValue = stardust;
-        stackStardustValue.set("Total stardust value: " + stardustValue);
-        stackNumPokemon.set("Total Pokemon: " + stack.size());
-    }
-
-    private void removeFromStack(String whatToRemove) {
-        try (PreparedStatement removeFromStack = conn.prepareStatement(whatToRemove)) {
-            removeFromStack.execute();
-            conn.commit();
-        } catch(SQLException e) {
-            System.out.println("Error creating prepared statement for remove: " + e.getMessage());
-        }
-    }
-
-    public Pokemon getPokemon(int pokedexNumber) {
-        return researchRewardsPokedexValue.get(pokedexNumber);
-    }
-
-    public Pokemon getPokemon(String pokemonName) {
-        return researchRewards.get(pokemonName);
-    }
-
 
     // Object to hold the Pokemon we want to convert.
     private final List<Pokemon> allPokemon = new LinkedList<>();
@@ -295,6 +249,41 @@ public class ConvertDbLowercase {
 
     // We need a method to write the new list of lowercase Pokemon names
     public void saveLowercasePokemon() {
+
+    }
+
+    // Method to load and then save as lowercase all Pokemon from table pokemon, rewards, legacy_rewards.
+    public void readPokemonFromDb(String tableSearchQuery) {
+        try(PreparedStatement statement = conn.prepareStatement(tableSearchQuery);
+            ResultSet results = statement.executeQuery()) {
+
+            List<Pokemon> pokemonList = new ArrayList<>();
+
+            while(results.next()) {
+                String name = results.getString(SQLiteQueries.INDEX_POKEMON_NAME);
+                int pokedex = results.getInt(SQLiteQueries.INDEX_POKEDEX_NUMBER);
+                int baseAttack = results.getInt(SQLiteQueries.INDEX_BASE_ATTACK);
+                int baseDefense = results.getInt(SQLiteQueries.INDEX_BASE_DEFENSE);
+                int baseStamina = results.getInt(SQLiteQueries.INDEX_BASE_STAMINA);
+                Pokemon newPokemon = new Pokemon(pokedex, name, baseAttack, baseDefense, baseStamina);
+            }
+
+            try {
+                conn.commit();
+            } catch (SQLException f) {
+                conn.rollback();
+                System.out.println("Error committing lowercase Pokemon using query:\n" +
+                        tableSearchQuery + " - " + f.getMessage());
+                f.printStackTrace();
+            }
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to load and then save as lowercase all Pokemon from table stack.
+    public void readPokemonFromDb() {
 
     }
 }
