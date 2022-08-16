@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.AddLegacyRewardDialogController"
+            prefHeight="200.0" prefWidth="800.0"
+            fx:id="rewardGridPane" hgap="5" vgap="5">
+
+<!--    <ComboBox fx:id="cpSelection" promptText="Select CP:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>-->
+    <Label text="Select CP:" GridPane.rowIndex="0" GridPane.columnIndex="7"/>
+    <ListView fx:id="cpListView" GridPane.rowIndex="0" GridPane.columnIndex="10" GridPane.rowSpan="7" prefWidth="70"/>
+
+
+</GridPane>

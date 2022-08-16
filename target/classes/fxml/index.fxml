@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="mainBorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="controller.Controller">
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem onAction="#updateResearchTable" text="Update rewards lists" />
+<!--                <MenuItem text="Update pokemon.db using information in pokemon.txt" onAction="#updateSqlDb"/>-->
+<!--                <MenuItem text="Download sprites for all Pokemon" onAction="#downloadAllSprites"/>-->
+                <MenuItem onAction="#exitProgram" text="Exit" />
+
+            </Menu>
+        </MenuBar>
+    </top>
+    <left>
+        <VBox alignment="CENTER" spacing="20">
+            <padding>
+                <Insets left="10" right="10" />
+            </padding>
+            <Button onAction="#loadRewardDialog" prefWidth="140" text="Claim Reward" />
+            <Button minWidth="-Infinity" onAction="#loadLegacyRewardDialog" prefWidth="140" text="Claim Legacy Reward" />
+            <Button onAction="#catchReward" prefWidth="140" text="Catch Reward" />
+            <Button minWidth="-Infinity" onAction="#catchALl" prefWidth="140" text="Catch All Rewards" />
+            <Label fx:id="totalPokemon" />
+            <Label fx:id="stardustValue" />
+        </VBox>
+    </left>
+    <right>
+        <TableView fx:id="stackTable" prefHeight="300" prefWidth="300">
+
+            <placeholder>
+                <Label text="${'You don\'t have any Pokemon in your stack yet!\nClick \'Claim Reward\' or \'Claim Legacy Reward\' to get started.'}"/>
+            </placeholder>
+            <columns>
+                <TableColumn prefWidth="120" text="Pokemon">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="name" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="60" text="CP">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="CP" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="120" text="IV">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="ivValuesPerCp" />
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+
+        </TableView>
+    </right>
+</BorderPane>

@@ -1,0 +1,17 @@
+model/IvValues.class
+controller/AddRewardDialogController.class
+controller/MainStarter.class
+controller/PokemonUpdate.class
+model/Pokemon.class
+controller/PokemonUpdate$1.class
+controller/PokemonUpdate$PokemonName.class
+model/PokemonGridPane.class
+controller/Main.class
+controller/PokemonUpdateTest.class
+dao/DataSource.class
+dao/ConvertDbLowercaseTest.class
+dao/ConvertDbLowercase.class
+util/SQLiteQueries.class
+model/PokemonTest.class
+controller/AddLegacyRewardDialogController.class
+controller/Controller.class
