@@ -4,7 +4,7 @@ public final class SQLiteQueries {
 
     // == SQLite constants ==
     public static final String DB_NAME = "Pokemon.db";
-    public static final String CONNECTION_STRING = "jdbc:sqlite:C:/Users/festi/IdeaProjects/Stacker JavaFX2/src/" + DB_NAME;
+    public static final String CONNECTION_STRING = "jdbc:sqlite:/home/sean/IdeaProjects/PoGoStacker/src/main/java/" + DB_NAME;
 
     public static final String TABLE_POKEMON = "pokemon";
     public static final String TABLE_RESEARCH_REWARDS = "rewards";

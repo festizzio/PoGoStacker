@@ -83,7 +83,7 @@ public class Controller {
         dialog.setTitle("Claim New Reward");
         FXMLLoader loader = new FXMLLoader();
 
-        loader.setLocation(getClass().getResource("../View/" + view + ".fxml"));
+        loader.setLocation(getClass().getResource("/fxml/" + view + ".fxml"));
 
         try {
             dialog.getDialogPane().setContent(loader.load());

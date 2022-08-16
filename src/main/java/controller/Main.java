@@ -17,7 +17,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/sample.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/fxml/index.fxml"));
 
         Parent root = loader.load();
         primaryStage.setTitle("Pokemon Stack");
